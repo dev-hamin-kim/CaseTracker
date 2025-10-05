@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class Case(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
-    added_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="added_cases")
+    added_by = models.ForeignKey(User, on_delete=models.SET_DEFAULT, related_name="added_cases", default="UNKNOWN")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
