@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import Case
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,3 +11,9 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+    
+class CaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Case
+        fields = ["id", "name", "description", "added_by", "created_at"]
+        extra_kwargs = {"created_by": {"read_only": True}}
