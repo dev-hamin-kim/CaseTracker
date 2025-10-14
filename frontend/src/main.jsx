@@ -5,6 +5,8 @@ import { TDSMobileAITProvider } from "@toss/tds-mobile-ait"
 
 createRoot(document.getElementById('root')).render(
   <TDSMobileAITProvider>
+	<StrictMode>
       <App />
+	</StrictMode>,
   </TDSMobileAITProvider>
 )
