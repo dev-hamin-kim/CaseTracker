@@ -1,13 +1,10 @@
 import { Asset, Top, FixedBottomCTA } from '@toss/tds-mobile';
 import { Spacing } from '@toss/emotion-utils';
 import { adaptive } from '@toss/tds-colors';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 
-export default function CheckIn() {
+export function CheckIn() {
     const navigate = useNavigate();
-    const onTap = () => {
-        navigate('/home');
-    }
 
   return (
     <>
@@ -32,7 +29,9 @@ export default function CheckIn() {
           aria-hidden={true}
         />
       </>
-      <FixedBottomCTA onTap={onTap} loading={false}>출근하기</FixedBottomCTA>
+      <FixedBottomCTA onTap={ () => {
+        navigate({ to: '/CheckInResult' });
+      } } loading={false}>출근하기</FixedBottomCTA>
     </>
   );
 }
