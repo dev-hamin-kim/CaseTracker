@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Checkin from "./pages/Checkin";
+import CheckIn from "./pages/Checkin";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Checkin />} />
+        <Route path="/" element={<CheckIn />} />
       </Routes>
     </BrowserRouter>
   );
