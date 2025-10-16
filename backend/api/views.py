@@ -20,7 +20,7 @@ class CaseListCreate(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         if serializer.is_valid():
-            serializer.save(author=self.request.user)
+            serializer.save(added_by=self.request.user)
         else:
             print(serializer.errors)
         
