@@ -11,37 +11,16 @@ class Case(models.Model):
         return self.name
 
 
+class Device(models.Model):
+    CATEGORY = models.TextChoices('CATEGORY', 'A B C D E F G H S1 S1_5 DUO')
+
+    short_name = models.CharField(max_length=10,
+                                  choices=CATEGORY.choices,
+                                  default='EMPTY')
+    
 class Variant(models.Model):
     brightness = models.CharField(max_length=6)
 
-# class Device(models.Model):
-#     S1 = "S1"
-#     S1_5 = "S1.5"
-#     DUO = "DUO"
-#     A = "A"
-#     B = "B"
-#     C = "C"
-#     D = "D"
-#     E = "E"
-#     F = "F"
-#     G = "G"
-#     H = "H"
-
-#     DEVICE_LIST = (
-#         (S1, "S1"),
-#         (S1_5, "S1.5"),
-#         (DUO, "DUO"),
-#         (A, "A"),
-#         (B, "B"),
-#         (C, "C"),
-#         (D, "D"),
-#         (E, "E"),
-#         (F, "F"),
-#         (G, "G"),
-#         (H, "H"),
-#     )
-
-#     name = models.CharField(max_length=5, choices=DEVICE_LIST, default="EMPTY")
 
 # class CaseVariant(models.Model):
 #     HIGH = "H"
@@ -60,6 +39,9 @@ class Variant(models.Model):
 #     brightness = models.CharField(max_length=6, choices=BRIGHTNESS_OPTION, default="M")
 #     collection_time = models.CharField(max_length=5, choices=TIME.choices)
 #     backlight = models.BooleanField(default=False)
+    target_device = models.ForeignKey(Device,
+                                      on_delete=models.ProtectedError)
+    
 
 # class CaseAssigned(models.Model):
 #     to_collector = models.ForeignKey(Collector, on_delete=models.CASCADE)
