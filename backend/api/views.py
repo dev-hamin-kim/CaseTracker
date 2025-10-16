@@ -3,17 +3,21 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 
-from .serializers import UserSerializer, CaseSerializer
-from .models import Case
+from .serializers import UserSerializer, CaseSerializer, DeviceSerializer
+from .models import Case, Device
+
+# ===== USER VIEWS ======
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+# ===== CASE VIEWS ======
+
 class CaseListCreate(generics.ListCreateAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return Case.objects.all()
@@ -33,8 +37,33 @@ class CaseDelete(generics.DestroyAPIView):
 
 class CaseList(generics.ListAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        return Case.objects.all()
+    
+
+# ===== DEVICE VIEWS ======
+
+class DeviceListCreate(generics.ListCreateAPIView):
+    serializer_class = DeviceSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Device.objects.all()
+    
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            print(serializer.errors)
+
+class DeviceList(generics.ListAPIView):
+    serializer_class = DeviceSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Device.objects.all()
 
 # class CaseDone(generics.UpdateAPIView):
 #     serializer_class
