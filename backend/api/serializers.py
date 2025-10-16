@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Case
+from .models import Case, Device, Variant
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,3 +17,22 @@ class CaseSerializer(serializers.ModelSerializer):
         model = Case
         fields = ["id", "name", "description", "added_by", "created_at"]
         extra_kwargs = {"created_by": {"read_only": True}}
+
+    def create(self, validated_data):
+        case = Case.objects.create(**validated_data)
+        return case
+
+class DeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Device
+        fields = ["id", "short_name"]
+
+    def create(self, validated_data):
+        device = Device.objects.create(**validated_data)
+        return device
+
+#     def createWithVariants(self, validated_data, variants_data):
+#         case = Case.objects.create(**validated_data)
+#         for variant_data in variants_data:
+#             Variant.objects.create(case=case, **variant_data)
+#         return case
