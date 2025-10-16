@@ -20,26 +20,18 @@ class Device(models.Model):
                                   default='EMPTY')
     
 class Variant(models.Model):
-    brightness = models.CharField(max_length=6)
+    TIME = models.TextChoices('TIME', 'DAY NIGHT')
+    BRIGHTNESS = models.TextChoices('BRIGHTNESS', 'HIGH MEDIUM LOW')
 
-
-# class CaseVariant(models.Model):
-#     HIGH = "H"
-#     MEDIUM = "M"
-#     LOW = "L"
-
-#     BRIGHTNESS_OPTION = (
-#         (HIGH, "H"),
-#         (MEDIUM, "M"),
-#         (LOW, "L"),
-#     )
-
-#     TIME = models.TextChoices('TIME', 'DAY NIGHT')
-
-#     target_device = models.ForeignKey(Device, on_delete=models.CASCADE)
-#     brightness = models.CharField(max_length=6, choices=BRIGHTNESS_OPTION, default="M")
-#     collection_time = models.CharField(max_length=5, choices=TIME.choices)
-#     backlight = models.BooleanField(default=False)
+    case = models.ForeignKey(Case,
+                             on_delete=models.ProtectedError,
+                             related_name="variants")
+    brightness = models.CharField(max_length=6,
+                                  choices=BRIGHTNESS.choices,
+                                  default='EMPTY')
+    collection_time = models.CharField(max_length=5,
+                                       choices=TIME.choices,
+                                       default='EMPTY')
     target_device = models.ForeignKey(Device,
                                       on_delete=models.ProtectedError)
     
