@@ -6,11 +6,12 @@ class Case(models.Model):
     description = models.CharField(max_length=200)
     added_by = models.ForeignKey(User, on_delete=models.SET_DEFAULT, related_name="added_cases", default="UNKNOWN")
     created_at = models.DateTimeField(auto_now_add=True)
+    backlight = models.BooleanField(default=False)
+    is_shown = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
-
-
+    
 class Device(models.Model):
     CATEGORY = models.TextChoices('CATEGORY', 'A B C D E F G H S1 S1_5 DUO')
 
