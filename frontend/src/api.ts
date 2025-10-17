@@ -1,7 +1,8 @@
 import axios from "axios"
+import type { AxiosInstance } from "axios"
 import { ACCESS_TOKEN } from "./constants"
 
-const api = axios.create({
+const api: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL
 })
 
