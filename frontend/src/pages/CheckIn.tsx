@@ -30,8 +30,8 @@ export function CheckIn() {
         />
       </div>
       <FixedBottomCTA onTap={ () => {
-        navigate({ to: '/CheckInResult' });
-      } } loading={false}>출근하기</FixedBottomCTA>
+        navigate({ to: '/CaseList' });
+      } } loading={false}>케이스 목록 보기</FixedBottomCTA>
     </>
   );
 }
