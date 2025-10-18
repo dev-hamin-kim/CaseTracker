@@ -1,6 +1,5 @@
-from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Case, Device, Variant
+from .models import User, Case, Device, Variant
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,3 +35,12 @@ class DeviceSerializer(serializers.ModelSerializer):
 #         for variant_data in variants_data:
 #             Variant.objects.create(case=case, **variant_data)
 #         return case
+
+class VariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant
+        fields = ["id", "case", "brightness", "collection_time", "target_device"]
+
+    def create(self, validated_data):
+        variant = Variant.objects.create(**validated_data)
+        return variant

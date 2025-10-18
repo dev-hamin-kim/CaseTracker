@@ -1,10 +1,9 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 
 from .serializers import UserSerializer, CaseSerializer, DeviceSerializer
-from .models import Case, Device
+from .models import User, Case, Device
 
 # ===== USER VIEWS ======
 
