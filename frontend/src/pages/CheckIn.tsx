@@ -28,7 +28,7 @@ export function CheckIn() {
         }
       />
       <Spacing size={98} />
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <Asset.Image
           frameShape={{ width: 200 }}
           src="https://static.toss.im/icons/png/4x/menu-list.png"
