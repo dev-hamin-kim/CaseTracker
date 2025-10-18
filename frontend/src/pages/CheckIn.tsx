@@ -1,10 +1,16 @@
-import { Asset, Top, FixedBottomCTA } from '@toss/tds-mobile';
-import { Spacing } from '@toss/emotion-utils';
-import { adaptive } from '@toss/tds-colors';
-import { useNavigate } from '@tanstack/react-router';
+import {
+  Asset,
+  Top,
+  FixedBottomCTA,
+  Button,
+  CTAButton,
+} from "@toss/tds-mobile";
+import { Spacing } from "@toss/emotion-utils";
+import { adaptive } from "@toss/tds-colors";
+import { useNavigate } from "@tanstack/react-router";
 
 export function CheckIn() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -29,9 +35,30 @@ export function CheckIn() {
           aria-hidden={true}
         />
       </div>
-      <FixedBottomCTA onTap={ () => {
-        navigate({ to: '/CaseList' });
-      } } loading={false}>케이스 목록 보기</FixedBottomCTA>
+      <FixedBottomCTA.Double
+        rightButton={
+          <CTAButton
+            color="primary"
+            onTap={() => {
+              navigate({ to: "/CaseList" });
+            }}
+          >
+            케이스 목록 보기
+          </CTAButton>
+        }
+        loading={false}
+        leftButton={
+          <CTAButton
+            variant="weak"
+            onTap={() => {
+              navigate({ to: "/CreateCase" });
+            }}
+          >
+            케이스 추가하기
+          </CTAButton>
+        }
+        hasSafeAreaPadding={true}
+      />
     </>
   );
 }
