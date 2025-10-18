@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+# ===== USER MODELS ======
 class User(AbstractUser):
     pass
 
+# ===== CASE MODELS ======
 class Case(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
@@ -15,6 +17,8 @@ class Case(models.Model):
     def __str__(self):
         return self.name
     
+# ===== DEVICE MODELS ======
+    
 class Device(models.Model):
     CATEGORY = models.TextChoices('CATEGORY', 'A B C D E F G H S1 S1_5 DUO')
 
@@ -22,6 +26,7 @@ class Device(models.Model):
                                   choices=CATEGORY.choices,
                                   default='EMPTY')
     
+# ===== VARIANT MODELS ======
 class Variant(models.Model):
     TIME = models.TextChoices('TIME', 'DAY NIGHT')
     BRIGHTNESS = models.TextChoices('BRIGHTNESS', 'HIGH MEDIUM LOW')
