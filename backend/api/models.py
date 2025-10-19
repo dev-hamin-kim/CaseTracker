@@ -8,7 +8,7 @@ class User(AbstractUser):
 # ===== CASE MODELS ======
 class Case(models.Model):
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True)
     added_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="added_cases", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     backlight = models.BooleanField(default=False)
