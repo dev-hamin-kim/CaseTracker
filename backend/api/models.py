@@ -22,7 +22,7 @@ class Case(models.Model):
 class Device(models.Model):
     CATEGORY = models.TextChoices('CATEGORY', 'A B C D E F G H S1 S1_5 DUO')
 
-    short_name = models.CharField(max_length=10,
+    category = models.CharField(max_length=10,
                                   choices=CATEGORY.choices,
                                   default='EMPTY')
     

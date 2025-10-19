@@ -24,7 +24,7 @@ class CaseSerializer(serializers.ModelSerializer):
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
-        fields = ["id", "short_name"]
+        fields = ["id", "category"]
 
     def create(self, validated_data):
         device = Device.objects.create(**validated_data)
