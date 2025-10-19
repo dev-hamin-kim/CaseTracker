@@ -15,7 +15,7 @@ class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = ["id", "name", "description", "added_by", "created_at"]
-        extra_kwargs = {"created_by": {"read_only": True}}
+        extra_kwargs = {"added_by": {"read_only": True}}
 
     def create(self, validated_data):
         case = Case.objects.create(**validated_data)

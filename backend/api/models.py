@@ -32,7 +32,7 @@ class Variant(models.Model):
     BRIGHTNESS = models.TextChoices('BRIGHTNESS', 'HIGH MEDIUM LOW')
 
     case = models.ForeignKey(Case,
-                             on_delete=models.ProtectedError,
+                             on_delete=models.PROTECT,
                              related_name="variants")
     brightness = models.CharField(max_length=6,
                                   choices=BRIGHTNESS.choices,
