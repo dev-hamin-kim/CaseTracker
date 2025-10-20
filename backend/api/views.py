@@ -14,6 +14,19 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+class HideUserView(generics.UpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        return User.objects.all()
+    
+    def perform_update(self, serializer):
+        if serializer.is_valid():
+            serializer.save(is_active=False)
+        else:
+            print(serializer.errors)
+
 # ===== CASE VIEWS ======
 
 class CreateCase(generics.CreateAPIView):
@@ -40,6 +53,19 @@ class CaseList(generics.ListAPIView):
     def get_queryset(self):
         return Case.objects.all()
     
+class HideCase(generics.UpdateAPIView):
+    serializer_class = CaseSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        return Case.objects.all()
+    
+    def perform_update(self, serializer):
+        if serializer.is_valid():
+            serializer.save(is_shown=False)
+        else:
+            print(serializer.errors)
+
 class ViewCaseVariants(generics.RetrieveAPIView):
     serializer_class = CaseSerializer
     permission_classes = [AllowAny]
