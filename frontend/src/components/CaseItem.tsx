@@ -1,12 +1,19 @@
-import { ListRow, Asset } from "@toss/tds-mobile";
+import { useNavigate } from "@tanstack/react-router";
+import { ListRow, Asset, Button } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 
 interface Props {
+  id: number;
   name: string;
   description: string;
 }
 
-export function CaseItem({ name, description }: Props) {
+export function CaseItem({ id, name, description }: Props) {
+  const navigate = useNavigate();
+  const onClick = () => {
+    navigate({ to: "/CaseTrack/$caseID", params: { caseID: id } });
+  };
+
   return (
     <ListRow
       contents={
@@ -28,6 +35,11 @@ export function CaseItem({ name, description }: Props) {
           src="https://static.toss.im/icons/png/4x/icon-plant-fill.png"
           frameShape={Asset.frameShape.CircleSmall}
         />
+      }
+      right={
+        <Button size="small" onClick={onClick}>
+            보기
+      </Button>
       }
     />
   );

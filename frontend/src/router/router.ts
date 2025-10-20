@@ -28,7 +28,7 @@ const checkInResultRoute = createRoute({
 
 const caseTrackRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/CaseTrack',
+  path: '/CaseTrack/$caseID',
   component: CaseTrack,
 });
 

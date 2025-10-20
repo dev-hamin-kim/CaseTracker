@@ -18,7 +18,7 @@ export function CaseList() {
 
   useEffect(() => {
     getCases();
-  }, []);
+  });
 
   const getCases = () => {
     api
@@ -39,6 +39,7 @@ export function CaseList() {
       {cases.map((item) => (
         <CaseItem
           key={item.id}
+          id={item.id}
           name={item.name}
           description={item.description}
         />
