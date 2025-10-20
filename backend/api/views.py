@@ -16,13 +16,9 @@ class CreateUserView(generics.CreateAPIView):
 
 # ===== CASE VIEWS ======
 
-class CreateCase(generics.ListCreateAPIView):
+class CreateCase(generics.CreateAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Case.objects.filter(added_by=user)
+    permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):
         if serializer.is_valid():
