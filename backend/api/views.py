@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, viewsets, status
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from django.utils import timezone
 
-from .serializers import UserSerializer, CaseSerializer, DeviceSerializer
-from .models import User, Case, Device
+from .serializers import UserSerializer, CaseSerializer, DeviceSerializer, VariantSerializer, VariantCompletionSerializer, AddVariantSerializer
+from .models import User, Case, Device, Variant, VariantCompletion
 
 # ===== USER VIEWS ======
 
@@ -42,6 +44,12 @@ class CaseList(generics.ListAPIView):
     def get_queryset(self):
         return Case.objects.all()
     
+class ViewCaseVariants(generics.RetrieveAPIView):
+    serializer_class = CaseSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Case.objects.all()
 
 # ===== DEVICE VIEWS ======
 
@@ -68,3 +76,65 @@ class DeviceList(generics.ListAPIView):
 # class CaseDone(generics.UpdateAPIView):
 #     serializer_class
 #     permission_classes = [IsAuthenticated]
+
+# ===== VARIANT VIEWS ======
+
+class CreateVariant(generics.CreateAPIView):
+    serializer_class = VariantSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        return Variant.objects.all()
+    
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            print(serializer.errors)
+
+class VariantList(generics.ListAPIView):
+    serializer_class = VariantSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Variant.objects.all()
+
+# ===== VARIANT PRESET VIEWS ======
+# TODO: complete variant preset views
+# class VariantPresetViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = VariantPreset.objects.prefetch_related('items__target_device').all()
+#     serializer_class = VariantPresetSerializer
+#     permission_classes = [IsAdminUser]
+
+# ===== VARIANT COMPLETION VIEWS ======
+class VariantCompletionViewSet(viewsets.ModelViewSet):
+    serializer_class = VariantCompletionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return VariantCompletion.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        instance = serializer.save(user=self.request.user)
+        if instance.completed and not instance.completed_at:
+            instance.completed_at = timezone.now()
+            instance.save()
+
+# ===== ADD VARIANT TO CASE VIEWS ======
+class AddVariantToCaseView(generics.GenericAPIView):
+    serializer_class = AddVariantSerializer
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, pk):
+        try:
+            case = Case.objects.get(pk=pk)
+        except Case.DoesNotExist:
+            return Response({"detail": "Case not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True) # ???
+
+        created_variants = serializer.save(case=case)
+
+        response_serializer = VariantSerializer(created_variants, many=True)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
