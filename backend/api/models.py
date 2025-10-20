@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 # ===== USER MODELS ======
@@ -42,13 +43,43 @@ class Variant(models.Model):
                                        default='EMPTY')
     target_device = models.ForeignKey(Device,
                                       on_delete=models.ProtectedError)
+    completed_by = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through='VariantCompletion',
+        related_name='completed_variants')
     
+class VariantPreset(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=200, blank=True)
+
+class VariantPresetItem(models.Model):
+    preset = models.ForeignKey(VariantPreset,
+                               on_delete=models.CASCADE,
+                               related_name="items")
+    brightness = models.CharField(max_length=6,
+                                  choices=Variant.BRIGHTNESS.choices,
+                                  default='EMPTY')
+    collection_time = models.CharField(max_length=5,
+                                       choices=Variant.TIME.choices,
+                                       default='EMPTY')
+    target_device = models.ForeignKey(Device,
+                                      on_delete=models.PROTECT)
+    
+class VariantCompletion(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name="variant_completions")
+    variant = models.ForeignKey(Variant,
+                                on_delete=models.CASCADE,
+                                related_name="completions")
+    completed = models.BooleanField(default=False)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('user', 'variant')
+
+
 
 # class CaseAssigned(models.Model):
 #     to_collector = models.ForeignKey(Collector, on_delete=models.CASCADE)
 
-
-# class CompletedCase(models.Model):
-#     collector = models.ForeignKey(Collector, on_delete=models.CASCADE)
-#     case = models.ForeignKey(Case, on_delete=models.CASCADE)
-#     completed_at = models.DateTimeField(auto_now_add=True)
