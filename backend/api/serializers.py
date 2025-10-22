@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant
-        fields = ["brightness", "collection_time", "target_device"]
+        fields = ["id", "brightness", "collection_time", "target_device", "accessory"]
 
 class CaseSerializer(serializers.ModelSerializer):
     variants = VariantSerializer(many=True, required=False)
@@ -41,6 +41,7 @@ class CaseSerializer(serializers.ModelSerializer):
                     brightness=item.brightness,
                     collection_time=item.collection_time,
                     target_device=item.target_device,
+                    accessory=item.accessory
                 )
 
         for variant_data in variants_data:
@@ -84,6 +85,7 @@ class AddVariantSerializer(serializers.Serializer):
                     brightness=item.brightness,
                     collection_time=item.collection_time,
                     target_device=item.target_device,
+                    accessory=item.accessory
                     )
                 )
 
@@ -107,7 +109,7 @@ class VariantPresetItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = VariantPresetItem
         fields = ['id', 'brightness', 'collection_time',
-                  'target_device_id', 'target_device_category']
+                  'target_device_id', 'target_device_category', 'accessory']
 
 class VariantPresetSerializer(serializers.ModelSerializer):
     items = VariantPresetItemSerializer(many=True, read_only=True)

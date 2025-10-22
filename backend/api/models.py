@@ -31,6 +31,7 @@ class Device(models.Model):
 class Variant(models.Model):
     TIME = models.TextChoices('TIME', 'DAY NIGHT')
     BRIGHTNESS = models.TextChoices('BRIGHTNESS', 'HIGH MEDIUM LOW')
+    ACCESSORY = models.TextChoices('ACCESSORY', 'NONE GLASSES HAT MASK GLASSES_HAT GLASSES_MASK HAT_MASK GLASSES_HAT_MASK ETC')
 
     case = models.ForeignKey(Case,
                              on_delete=models.PROTECT,
@@ -42,7 +43,10 @@ class Variant(models.Model):
                                        choices=TIME.choices,
                                        default='EMPTY')
     target_device = models.ForeignKey(Device,
-                                      on_delete=models.ProtectedError)
+                                      on_delete=models.PROTECT)
+    accessory = models.CharField(max_length=20,
+                                 choices=ACCESSORY.choices,
+                                 default='EMPTY')
     completed_by = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='VariantCompletion',
@@ -64,6 +68,9 @@ class VariantPresetItem(models.Model):
                                        default='EMPTY')
     target_device = models.ForeignKey(Device,
                                       on_delete=models.PROTECT)
+    accessory = models.CharField(max_length=20,
+                                 choices=Variant.ACCESSORY.choices,
+                                 default='EMPTY')
     
 class VariantCompletion(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
