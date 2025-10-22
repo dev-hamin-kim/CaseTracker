@@ -11,6 +11,7 @@ urlpatterns = [
     path("cases/", views.CaseList.as_view(), name="case-list"),
     path("cases/create/", views.CreateCase.as_view(), name="create-case"),
     path("cases/delete/<int:pk>/", views.CaseDelete.as_view(), name="delete-case"),
+    path("cases/view/<int:pk>/", views.ViewCase.as_view(), name="view-case"),
 
     # ===== DEVICE URLS ======
     path("devices/create/", views.DeviceListCreate.as_view(), name="create-device"),

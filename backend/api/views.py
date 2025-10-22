@@ -66,6 +66,13 @@ class HideCase(generics.UpdateAPIView):
         else:
             print(serializer.errors)
 
+class ViewCase(generics.RetrieveAPIView):
+    serializer_class = CaseSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Case.objects.all()
+
 class ViewCaseVariants(generics.RetrieveAPIView):
     serializer_class = CaseSerializer
     permission_classes = [AllowAny]
