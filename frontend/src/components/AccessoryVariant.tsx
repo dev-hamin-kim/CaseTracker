@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Asset, GridList, Skeleton } from "@toss/tds-mobile";
+import { colors } from "@toss/tds-colors";
 import type { Variant } from "../pages/CaseTrack";
 
 interface Props {
@@ -16,19 +18,39 @@ const AccessoryDisplay: Record<Accessories, string> = {
 };
 
 export function AccessoryVariant({ variants, onClick }: Props) {
+  const [selectedID, setSelectedID] = useState<number | null>(null);
+
   if (!variants?.length) {
     return <Skeleton pattern="listOnly" />;
+  }
+
+  const handleClick = (id: number) => {
+    setSelectedID(id);
+    onClick(id);
   }
 
   return (
     <>
       <GridList column={2}>
-        {variants.map((item) => (
-          <GridList.Item image={<AccessoryIcon item={item.accessory} />}
-          onClick={() => onClick(item.id)}>
-            {AccessoryDisplay[item.accessory as Accessories]}
-          </GridList.Item>
-        ))}
+        {variants.map((item) => {
+          const isSelected = item.id === selectedID;
+
+          return (
+            <GridList.Item
+              key={item.id}
+              image={<AccessoryIcon item={item.accessory} />}
+              onClick={() => handleClick(item.id)}
+              style={{
+                backgroundColor: isSelected ? colors.blue200 : colors.background,
+                borderColor: isSelected ? colors.blue300 : colors.background,
+                borderRadius: 8,
+                transition: "background-color 0.2s ease",
+              }}
+            >
+              {AccessoryDisplay[item.accessory as Accessories]}
+            </GridList.Item>
+          );
+        })}
       </GridList>
     </>
   );
@@ -41,7 +63,7 @@ function AccessoryIcon({ item }: { item: string }) {
     return (
       <Asset.Image
         frameShape={Asset.frameShape.CleanW24}
-        backgroundColor="transparent"
+        backgroundColor="clear"
         src="https://static.toss.im/2d-emojis/png/4x/u1F3A9.png"
         aria-hidden={true}
         style={{ aspectRatio: "1/1" }}
