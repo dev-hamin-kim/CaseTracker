@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { List, useToast } from "@toss/tds-mobile";
+import { List, useToast, Top, Skeleton } from "@toss/tds-mobile";
+import { adaptive } from "@toss/tds-colors";
 
 import { CaseItem } from "../components/CaseItem";
 import api from "../api";
@@ -18,7 +19,7 @@ export function CaseList() {
 
   useEffect(() => {
     getCases();
-  });
+  }, []);
 
   const getCases = () => {
     api
@@ -35,15 +36,27 @@ export function CaseList() {
 
   return (
   <div className="case-containter">
+          <Top
+        title={
+          <Top.TitleParagraph size={22} color={adaptive.grey900}>
+            내가 진행하던 케이스에요.
+          </Top.TitleParagraph>
+        }
+        />
+
     <List>
-      {cases.map((item) => (
+    {!cases?.length ? (
+      <Skeleton pattern="listWithIconOnly" />
+    ) : (
+      cases.map((item) => (
         <CaseItem
           key={item.id}
           id={item.id}
           name={item.name}
           description={item.description}
         />
-      ))}
+      ))
+    )}
     </List>
   </div>
   );
