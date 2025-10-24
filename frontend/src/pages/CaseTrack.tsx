@@ -7,7 +7,7 @@ import {
   CTAButton,
   SegmentedControl,
   useToast,
-  Menu
+  Menu,
 } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 import { Spacing } from "@toss/emotion-utils";
@@ -26,9 +26,9 @@ interface Case {
   description: string;
   added_by: string | null;
   created_at: string;
-  backlight: boolean
-  is_shown: boolean
-  variants: [Variant]
+  backlight: boolean;
+  is_shown: boolean;
+  variants: [Variant];
 }
 
 export interface Variant {
@@ -37,6 +37,7 @@ export interface Variant {
   collection_time: string;
   target_device_category: string;
   accessory: string;
+  completed: boolean;
 }
 
 type BrightnessLevel = "LOW" | "MEDIUM" | "HIGH";
@@ -53,8 +54,8 @@ export function CaseTrack() {
   const { openToast } = useToast();
 
   const [caseData, setCaseData] = useState<Case>();
-  const [selectedDevice, setSelectedDevice] = useState("")
-  const [selectedVariant, setSelectedVariant] = useState(0)
+  const [selectedDevice, setSelectedDevice] = useState("");
+  // const [selectedVariant, setSelectedVariant] = useState(0);
 
   const [first, second, third] = [
     BrightnessLevelDisplay.LOW,
@@ -64,23 +65,23 @@ export function CaseTrack() {
 
   const [tabState, setTabState] = useState(BrightnessLevelDisplay.HIGH);
 
-  const allDevices = caseData?.variants.map((variant) => (
-    variant.target_device_category
-  ))
-  const targetDevices = [... new Set(allDevices)]
+  const allDevices = caseData?.variants.map(
+    (variant) => variant.target_device_category
+  );
+  const targetDevices = [...new Set(allDevices)];
 
-  const variantsWithSelectedDevice = caseData?.variants.filter((variant) =>
-    variant.target_device_category === selectedDevice
-  )
+  const variantsWithSelectedDevice = caseData?.variants.filter(
+    (variant) => variant.target_device_category === selectedDevice
+  );
 
-  const finalAccessoryVariants = variantsWithSelectedDevice?.filter((variant) =>
-    BrightnessLevelDisplay[variant.brightness as BrightnessLevel] === tabState
-  )
+  const finalAccessoryVariants = variantsWithSelectedDevice?.filter(
+    (variant) =>
+      BrightnessLevelDisplay[variant.brightness as BrightnessLevel] === tabState
+  );
 
   const onTabStateChange = (value: string) => {
     setTabState(value);
   };
-
 
   useEffect(() => {
     getCaseInfo();
@@ -99,18 +100,67 @@ export function CaseTrack() {
       );
   };
 
+  const postVariantDone = (id: number) => {
+    api.post(`/api/variants/completion-status/${id}/`).catch(() =>
+      openToast("저장하지 못했어요.", {
+        type: "top",
+        lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+      })
+    );
+  };
+
+  const deleteVariantDone = (id: number) => {
+    api.delete(`/api/variants/completion-status/${id}/`).catch(() =>
+      openToast("삭제하지 못했어요.", {
+        type: "top",
+        lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+      })
+    );
+  };
+
+  const onClickingAccessoryVariant = (id: number) => {
+    const selectedVariant = caseData?.variants
+      .filter((variant) => variant.id === id)
+      .at(0);
+    const isVariantDone = selectedVariant?.completed;
+
+    if (isVariantDone === undefined) {
+      openToast(
+        "알 수 없는 문제가 발생했어요. 스크린샷을 관리자에게 공유해주세요.",
+        {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        }
+      );
+      return;
+    }
+
+    if (isVariantDone) {
+      deleteVariantDone(id);
+    } else {
+      postVariantDone(id);
+    }
+
+    getCaseInfo();
+  };
+
   return (
     <>
       <Top
         title={
           <Top.TitleParagraph size={22} color={adaptive.grey900}>
-            {caseData?.name} {selectedDevice} {selectedVariant}
+            {caseData?.name}
           </Top.TitleParagraph>
         }
-        lower={<DeviceSelect
-          list={targetDevices}
-          onCheck={setSelectedDevice}
-          />}
+        subtitleTop={
+          <Top.SubtitleTextButton>
+            {" "}
+            설명 보기 (아직 구현 X){" "}
+          </Top.SubtitleTextButton>
+        }
+        lower={
+          <DeviceSelect list={targetDevices} onCheck={setSelectedDevice} />
+        }
       />
       <div>
         <SegmentedControl value={tabState} onChange={onTabStateChange}>
@@ -121,7 +171,10 @@ export function CaseTrack() {
       </div>
       <Spacing size={14} />
       <>
-        <AccessoryVariant variants={finalAccessoryVariants} onClick={setSelectedVariant} />
+        <AccessoryVariant
+          variants={finalAccessoryVariants}
+          onClick={onClickingAccessoryVariant}
+        />
       </>
       <FixedBottomCTA.Double
         leftButton={
