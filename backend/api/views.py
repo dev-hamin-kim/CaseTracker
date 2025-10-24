@@ -31,7 +31,7 @@ class HideUserView(generics.UpdateAPIView):
 
 class CreateCase(generics.CreateAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -48,7 +48,7 @@ class CaseDelete(generics.DestroyAPIView):
 
 class CaseList(generics.ListAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Case.objects.all()
@@ -68,14 +68,14 @@ class HideCase(generics.UpdateAPIView):
 
 class ViewCase(generics.RetrieveAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Case.objects.all()
 
 class ViewCaseVariants(generics.RetrieveAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Case.objects.all()
@@ -84,7 +84,7 @@ class ViewCaseVariants(generics.RetrieveAPIView):
 
 class DeviceListCreate(generics.ListCreateAPIView):
     serializer_class = DeviceSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         return Device.objects.all()
@@ -97,7 +97,7 @@ class DeviceListCreate(generics.ListCreateAPIView):
 
 class DeviceList(generics.ListAPIView):
     serializer_class = DeviceSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Device.objects.all()
