@@ -55,8 +55,9 @@ export function CaseTrack() {
 
   const [caseData, setCaseData] = useState<Case>();
   const [selectedDevice, setSelectedDevice] = useState("");
-  // const [selectedVariant, setSelectedVariant] = useState(0);
 
+  // first, second, third는 탭의 순서를 뜻합니다.
+  // 즉, 내용물의 순서를 조정하면 저절로 UI에 반영되는 구조입니다.
   const [first, second, third] = [
     BrightnessLevelDisplay.LOW,
     BrightnessLevelDisplay.MEDIUM,
