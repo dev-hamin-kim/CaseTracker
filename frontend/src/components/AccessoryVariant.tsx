@@ -25,28 +25,31 @@ export function AccessoryVariant({ variants, onClick }: Props) {
   }
 
   const handleClick = (id: number) => {
-    setSelectedID(id);
+    if (selectedID === null) {
+      setSelectedID(id);
+    } else {
+      setSelectedID(null);
+    }
     onClick(id);
-  }
+  };
 
   return (
     <>
       <GridList column={2}>
         {variants.map((item) => {
-          const isCompleted = item.id === selectedID || item.completed;
+          const isCompleted = item.completed;
 
           return (
             <GridList.Item
               key={item.id}
               image={<AccessoryIcon item={item.accessory} />}
               onClick={() => {
-                if (selectedID !== null) {
-                  setSelectedID(null)
-                }
-                handleClick(item.id)
+                handleClick(item.id);
               }}
               style={{
-                backgroundColor: isCompleted ? colors.blue200 : colors.background,
+                backgroundColor: isCompleted
+                  ? colors.blue200
+                  : colors.background,
                 borderColor: isCompleted ? colors.blue300 : colors.background,
                 borderRadius: 8,
                 transition: "background-color 0.2s ease",
@@ -62,7 +65,7 @@ export function AccessoryVariant({ variants, onClick }: Props) {
 }
 
 function AccessoryIcon({ item }: { item: string }) {
-  let iconName = ""
+  let iconName = "";
 
   if (item === "HAT") {
     return (
@@ -76,21 +79,21 @@ function AccessoryIcon({ item }: { item: string }) {
     );
   }
 
-    if (item.match("NONE")) {
-    iconName = "icon-emoji"
+  if (item.match("NONE")) {
+    iconName = "icon-emoji";
   } else if (item.match("GLASSES")) {
-    iconName = "icon-glasses"
+    iconName = "icon-glasses";
   } else if (item.match("MASK")) {
-    iconName = "icon-mask"
+    iconName = "icon-mask";
   }
 
   return (
-            <Asset.Icon
-          frameShape={Asset.frameShape.CleanW24}
-          backgroundColor="transparent"
-          name={iconName}
-          aria-hidden={true}
-          ratio="1/1"
-        />
+    <Asset.Icon
+      frameShape={Asset.frameShape.CleanW24}
+      backgroundColor="transparent"
+      name={iconName}
+      aria-hidden={true}
+      ratio="1/1"
+    />
   );
 }
