@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, viewsets, status
+from rest_framework import generics, views, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.utils import timezone
@@ -136,18 +136,40 @@ class VariantList(generics.ListAPIView):
 #     permission_classes = [IsAdminUser]
 
 # ===== VARIANT COMPLETION VIEWS ======
-class VariantCompletionViewSet(viewsets.ModelViewSet):
-    serializer_class = VariantCompletionSerializer
+class CompleteVariantView(views.APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        return VariantCompletion.objects.filter(user=self.request.user)
+    def post(self, request, pk):
+        """
+        Marks a variant as completed by the current user.
+        """
+        try:
+            variant = Variant.objects.get(pk=pk)
+        except Variant.DoesNotExist:
+            return Response({"detail": "Variant not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Either get existing or create a new completion record
+        completion, created = VariantCompletion.objects.get_or_create(
+            user=request.user,
+            variant=variant,
+            defaults={"completed": True, "completed_at": timezone.now()},
+        )
+
+        # If it already existed but wasn't completed, mark it now
+        if not created:
+            if not completion.completed:
+                completion.completed = True
+                completion.completed_at = timezone.now()
+                completion.save()
+
+        serializer = VariantCompletionSerializer(completion)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def perform_create(self, serializer):
-        instance = serializer.save(user=self.request.user)
-        if instance.completed and not instance.completed_at:
-            instance.completed_at = timezone.now()
-            instance.save()
+    def delete(self, request, pk):
+        VariantCompletion.objects.filter(user=request.user, variant_id=pk).update(
+        completed=False, completed_at=None
+        )
+        return Response({"detail": "Variant unmarked as completed."}, status=status.HTTP_200_OK)
 
 # ===== ADD VARIANT TO CASE VIEWS ======
 class AddVariantToCaseView(generics.GenericAPIView):
