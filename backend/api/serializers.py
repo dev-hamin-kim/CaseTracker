@@ -12,9 +12,20 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
 class VariantSerializer(serializers.ModelSerializer):
+    completed = serializers.SerializerMethodField()
+    target_device_category = serializers.CharField(source='target_device.category', read_only=True)
+
     class Meta:
         model = Variant
-        fields = ["id", "brightness", "collection_time", "target_device", "accessory"]
+        fields = ["id", "brightness", "collection_time", "target_device_category", "accessory", "completed"]
+
+    def get_completed(self, obj):
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return VariantCompletion.objects.filter(
+            user=request.user, variant=obj, completed=True
+        ).exists()
 
 class CaseSerializer(serializers.ModelSerializer):
     variants = VariantSerializer(many=True, required=False)
@@ -119,11 +130,11 @@ class VariantPresetSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'items']
 
 class VariantCompletionSerializer(serializers.ModelSerializer):
-    variant_name = serializers.CharField(source='variant.case.name', read_only=True)
+    variant_case_name = serializers.CharField(source='variant.case.name', read_only=True)
 
     class Meta:
         model = VariantCompletion
-        fields = ['id', 'user', 'variant', 'completed', 'completed_at']
+        fields = ['id', 'user', 'variant', 'completed', 'completed_at', 'variant_case_name']
 #     def createWithVariants(self, validated_data, variants_data):
 #         case = Case.objects.create(**validated_data)
 #         for variant_data in variants_data:
