@@ -71,7 +71,10 @@ class ViewCase(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Case.objects.all()
+        return Case.objects.prefetch_related(
+            'variants__target_device'
+        ).select_related('added_by')
+    
 
 class ViewCaseVariants(generics.RetrieveAPIView):
     serializer_class = CaseSerializer
