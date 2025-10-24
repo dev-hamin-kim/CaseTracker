@@ -76,6 +76,11 @@ class ViewCase(generics.RetrieveAPIView):
         ).select_related('added_by')
     
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
 class ViewCaseVariants(generics.RetrieveAPIView):
     serializer_class = CaseSerializer
     permission_classes = [IsAuthenticated]
@@ -99,6 +104,13 @@ class DeviceListCreate(generics.ListCreateAPIView):
             print(serializer.errors)
 
 class DeviceList(generics.ListAPIView):
+    serializer_class = DeviceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Device.objects.all()
+    
+class ViewDevice(generics.RetrieveAPIView):
     serializer_class = DeviceSerializer
     permission_classes = [IsAuthenticated]
 
