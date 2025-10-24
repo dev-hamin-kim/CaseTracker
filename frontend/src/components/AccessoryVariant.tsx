@@ -33,16 +33,21 @@ export function AccessoryVariant({ variants, onClick }: Props) {
     <>
       <GridList column={2}>
         {variants.map((item) => {
-          const isSelected = item.id === selectedID;
+          const isCompleted = item.id === selectedID || item.completed;
 
           return (
             <GridList.Item
               key={item.id}
               image={<AccessoryIcon item={item.accessory} />}
-              onClick={() => handleClick(item.id)}
+              onClick={() => {
+                if (selectedID !== null) {
+                  setSelectedID(null)
+                }
+                handleClick(item.id)
+              }}
               style={{
-                backgroundColor: isSelected ? colors.blue200 : colors.background,
-                borderColor: isSelected ? colors.blue300 : colors.background,
+                backgroundColor: isCompleted ? colors.blue200 : colors.background,
+                borderColor: isCompleted ? colors.blue300 : colors.background,
                 borderRadius: 8,
                 transition: "background-color 0.2s ease",
               }}
