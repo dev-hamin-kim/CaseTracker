@@ -4,7 +4,7 @@ import { colors } from "@toss/tds-colors";
 import type { Variant } from "../pages/CaseTrack";
 
 interface Props {
-  variants: [Variant];
+  variants: Variant[] | undefined;
   onClick: (id: number) => void;
 }
 
