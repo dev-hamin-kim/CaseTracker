@@ -2,11 +2,11 @@ import React from "react";
 import { Top, Menu } from "@toss/tds-mobile";
 
 interface Props {
-    list: string[]
-    onCheck: (checked: string) => void
+  devices: string[];
+  onCheck: (checked: string) => void;
 }
 
-export function DeviceSelect( { list, onCheck }: Props) {
+export function DeviceSelect({ devices, onCheck }: Props) {
   const [open, setOpen] = React.useState(false);
   const [checked, setChecked] = React.useState("");
   return (
@@ -17,7 +17,7 @@ export function DeviceSelect( { list, onCheck }: Props) {
       placement="right-end"
       dropdown={
         <Menu.Dropdown header={<Menu.Header>테스트할 기기</Menu.Header>}>
-          {list.map((device) => (
+          {devices.map((device) => (
             // 나중에 이거 여백 좀 어떻게 해야 좀 덜 어색할듯
             <Menu.DropdownCheckItem
               checked={checked === device}

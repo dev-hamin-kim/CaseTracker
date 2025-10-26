@@ -7,65 +7,70 @@ import {
   CTAButton,
   SegmentedControl,
   useToast,
-  Menu,
+  // Menu,
 } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 import { Spacing } from "@toss/emotion-utils";
 
 import api from "../api";
+
+// Component imports
 import { AccessoryVariant } from "../components/AccessoryVariant";
-import { DeviceSelect } from "../components/DeviceSelect";
+import { DeviceSelect } from "../components/CaseTrack/DeviceSelect";
+import { BrightnessTab } from "../components/CaseTrack/BrightnessTab";
+
+// Constants, Type, Interface imports
+import type { Case, BrightnessLevel } from "../components/CaseTrack/constants";
+import { BrightnessLevelDisplay } from "../components/CaseTrack/constants";
 
 export const Route = createFileRoute()({
   component: CaseTrack,
 });
-
-interface Case {
-  id: number;
-  name: string;
-  description: string;
-  added_by: string | null;
-  created_at: string;
-  backlight: boolean;
-  is_shown: boolean;
-  variants: [Variant];
-}
-
-export interface Variant {
-  id: number;
-  brightness: string;
-  collection_time: string;
-  target_device_category: string;
-  accessory: string;
-  completed: boolean;
-}
-
-type BrightnessLevel = "LOW" | "MEDIUM" | "HIGH";
-
-const BrightnessLevelDisplay: Record<BrightnessLevel, string> = {
-  LOW: "낮음",
-  MEDIUM: "중간",
-  HIGH: "높음",
-};
 
 // TODO: 완료한 케이스 보기 또는 보지 않기 추가?
 export function CaseTrack() {
   const { caseID } = Route.useParams();
   const { openToast } = useToast();
 
+  // State of current Case
   const [caseData, setCaseData] = useState<Case>();
+
+  // State of components
+  const [tabState, setTabState] = useState(BrightnessLevelDisplay.HIGH);
   const [selectedDevice, setSelectedDevice] = useState("");
 
-  // first, second, third는 탭의 순서를 뜻합니다.
-  // 즉, 내용물의 순서를 조정하면 저절로 UI에 반영되는 구조입니다.
-  const [first, second, third] = [
-    BrightnessLevelDisplay.LOW,
-    BrightnessLevelDisplay.MEDIUM,
-    BrightnessLevelDisplay.HIGH,
-  ];
+  // onChange, onClick functions
+  const onTabStateChange = (value: string) => {
+    setTabState(value);
+  };
 
-  const [tabState, setTabState] = useState(BrightnessLevelDisplay.HIGH);
+  const onClickingAccessoryVariant = (id: number) => {
+    const selectedVariant = caseData?.variants
+      .filter((variant) => variant.id === id)
+      .at(0);
+    const isVariantDone = selectedVariant?.completed;
 
+    if (isVariantDone === undefined) {
+      openToast(
+        "알 수 없는 문제가 발생했어요. 스크린샷을 관리자에게 공유해주세요.",
+        {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        }
+      );
+      return;
+    }
+
+    if (isVariantDone) {
+      deleteVariantDone(id);
+    } else {
+      postVariantDone(id);
+    }
+
+    getCaseInfo();
+  };
+  
+  // 여기부터
   const allDevices = caseData?.variants.map(
     (variant) => variant.target_device_category
   );
@@ -80,14 +85,13 @@ export function CaseTrack() {
       BrightnessLevelDisplay[variant.brightness as BrightnessLevel] === tabState
   );
 
-  const onTabStateChange = (value: string) => {
-    setTabState(value);
-  };
+  // 여기까지 정리하기.
 
   useEffect(() => {
     getCaseInfo();
   }, []);
 
+  // API handling
   const getCaseInfo = () => {
     api
       .get(`/api/cases/view/${caseID}/`)
@@ -119,32 +123,6 @@ export function CaseTrack() {
     );
   };
 
-  const onClickingAccessoryVariant = (id: number) => {
-    const selectedVariant = caseData?.variants
-      .filter((variant) => variant.id === id)
-      .at(0);
-    const isVariantDone = selectedVariant?.completed;
-
-    if (isVariantDone === undefined) {
-      openToast(
-        "알 수 없는 문제가 발생했어요. 스크린샷을 관리자에게 공유해주세요.",
-        {
-          type: "top",
-          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-        }
-      );
-      return;
-    }
-
-    if (isVariantDone) {
-      deleteVariantDone(id);
-    } else {
-      postVariantDone(id);
-    }
-
-    getCaseInfo();
-  };
-
   return (
     <>
       <Top
@@ -160,15 +138,14 @@ export function CaseTrack() {
           </Top.SubtitleTextButton>
         }
         lower={
-          <DeviceSelect list={targetDevices} onCheck={setSelectedDevice} />
+          <DeviceSelect devices={targetDevices} onCheck={setSelectedDevice} />
         }
       />
       <div>
-        <SegmentedControl value={tabState} onChange={onTabStateChange}>
-          <SegmentedControl.Item value={first}>{first}</SegmentedControl.Item>
-          <SegmentedControl.Item value={second}>{second}</SegmentedControl.Item>
-          <SegmentedControl.Item value={third}>{third}</SegmentedControl.Item>
-        </SegmentedControl>
+        <BrightnessTab
+          tabState={tabState}
+          onTabStateChange={onTabStateChange}
+        />
       </div>
       <Spacing size={14} />
       <>
