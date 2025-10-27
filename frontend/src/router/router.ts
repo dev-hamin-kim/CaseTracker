@@ -4,6 +4,7 @@ import {
   createRootRoute,
 } from '@tanstack/react-router';
 
+import { Login } from '../pages/Login';
 import { CheckIn } from '../pages/CheckIn';
 import { CheckInResult } from '../pages/CheckInResult';
 import { CaseTrack } from '../pages/CaseTrack';
@@ -14,9 +15,15 @@ import { CreateCase } from '../pages/CreateCase';
 
 const rootRoute = createRootRoute();
 
-const checkInRoute = createRoute({
+const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
+  component: Login
+})
+
+const checkInRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/CheckIn',
   component: CheckIn,
 });
 
@@ -49,5 +56,5 @@ const createCaseRoute = createRoute({
 //   component: Home,
 // });
 
-const routeTree = rootRoute.addChildren([checkInRoute, checkInResultRoute, caseTrackRoute, caseListRoute, createCaseRoute]);
+const routeTree = rootRoute.addChildren([loginRoute, checkInRoute, checkInResultRoute, caseTrackRoute, caseListRoute, createCaseRoute]);
 export const router = createRouter({ routeTree });
