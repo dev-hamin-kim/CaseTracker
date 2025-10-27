@@ -5,17 +5,16 @@ import {
   Top,
   FixedBottomCTA,
   CTAButton,
-  SegmentedControl,
   useToast,
   // Menu,
 } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 import { Spacing } from "@toss/emotion-utils";
 
-import api from "../api";
+import { requestWithToken } from "../api";
 
 // Component imports
-import { AccessoryVariant } from "../components/AccessoryVariant";
+import { AccessoryVariant } from "../components/CaseTrack/AccessoryVariant";
 import { DeviceSelect } from "../components/CaseTrack/DeviceSelect";
 import { BrightnessTab } from "../components/CaseTrack/BrightnessTab";
 
@@ -44,13 +43,12 @@ export function CaseTrack() {
     setTabState(value);
   };
 
-  const onClickingAccessoryVariant = (id: number) => {
+  const onClickingAccessoryVariant = async (id: number) => {
     const selectedVariant = caseData?.variants
       .filter((variant) => variant.id === id)
       .at(0);
-    const isVariantDone = selectedVariant?.completed;
 
-    if (isVariantDone === undefined) {
+    if (selectedVariant === undefined) {
       openToast(
         "알 수 없는 문제가 발생했어요. 스크린샷을 관리자에게 공유해주세요.",
         {
@@ -61,15 +59,30 @@ export function CaseTrack() {
       return;
     }
 
-    if (isVariantDone) {
-      deleteVariantDone(id);
-    } else {
-      postVariantDone(id);
+    const isVariantDone = selectedVariant.completed;
+
+    try {
+      selectedVariant.isLoading = true;
+      if (isVariantDone) {
+        await deleteVariantDone(id);
+      } else {
+        await postVariantDone(id);
+      }
+    } catch (error) {
+      openToast(
+        "진행상황을 저장하는 중에 문제가 생겼어요. 스크린샷을 관리자에게 공유해주세요." + `${error}`,
+        {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        }
+      );
+    } finally {
+      selectedVariant.isLoading = false;
     }
 
     getCaseInfo();
   };
-  
+
   // 여기부터
   const allDevices = caseData?.variants.map(
     (variant) => variant.target_device_category
@@ -93,9 +106,7 @@ export function CaseTrack() {
 
   // API handling
   const getCaseInfo = () => {
-    api
-      .get(`/api/cases/view/${caseID}/`)
-      .then((response) => response.data)
+    requestWithToken(`api/cases/view/${caseID}/`, "GET")
       .then((data) => setCaseData(data))
       .catch(() =>
         openToast("진행상황을 불러오지 못했어요.", {
@@ -105,21 +116,23 @@ export function CaseTrack() {
       );
   };
 
-  const postVariantDone = (id: number) => {
-    api.post(`/api/variants/completion-status/${id}/`).catch(() =>
-      openToast("저장하지 못했어요.", {
-        type: "top",
-        lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-      })
+  const postVariantDone = async (id: number) => {
+    requestWithToken(`api/variants/completion-status/${id}/`, "POST").catch(
+      () =>
+        openToast("저장하지 못했어요.", {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        })
     );
   };
 
-  const deleteVariantDone = (id: number) => {
-    api.delete(`/api/variants/completion-status/${id}/`).catch(() =>
-      openToast("삭제하지 못했어요.", {
-        type: "top",
-        lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-      })
+  const deleteVariantDone = async (id: number) => {
+    requestWithToken(`api/variants/completion-status/${id}/`, "DELETE").catch(
+      () =>
+        openToast("삭제하지 못했어요.", {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        })
     );
   };
 
@@ -156,11 +169,20 @@ export function CaseTrack() {
       </>
       <FixedBottomCTA.Double
         leftButton={
-          <CTAButton color="dark" variant="weak" display="block">
+          <CTAButton
+            color="dark"
+            variant="weak"
+            display="block"
+            disabled={true}
+          >
             닫기
           </CTAButton>
         }
-        rightButton={<CTAButton display="block">확인했어요</CTAButton>}
+        rightButton={
+          <CTAButton display="block" disabled={true}>
+            확인했어요
+          </CTAButton>
+        }
       />
     </>
   );

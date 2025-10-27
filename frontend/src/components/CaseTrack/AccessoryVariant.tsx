@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Asset, GridList, Skeleton } from "@toss/tds-mobile";
+import { Asset, GridList, Skeleton, Loader } from "@toss/tds-mobile";
 import { colors } from "@toss/tds-colors";
-import type { Variant } from "../pages/CaseTrack";
+import type { Variant } from "./constants";
 
 interface Props {
   variants: Variant[] | undefined;
@@ -42,9 +42,17 @@ export function AccessoryVariant({ variants, onClick }: Props) {
           return (
             <GridList.Item
               key={item.id}
-              image={<AccessoryIcon item={item.accessory} />}
+              image={
+                item.isLoading ? (
+                  <Loader size="small" />
+                ) : (
+                  <AccessoryIcon item={item.accessory} />
+                )
+              }
               onClick={() => {
-                handleClick(item.id);
+                if (!item.isLoading) {
+                  handleClick(item.id);
+                }
               }}
               style={{
                 backgroundColor: isCompleted
@@ -55,7 +63,7 @@ export function AccessoryVariant({ variants, onClick }: Props) {
                 transition: "background-color 0.2s ease",
               }}
             >
-              {AccessoryDisplay[item.accessory as Accessories]}
+              {item.isLoading ? "" : AccessoryDisplay[item.accessory as Accessories]}
             </GridList.Item>
           );
         })}
