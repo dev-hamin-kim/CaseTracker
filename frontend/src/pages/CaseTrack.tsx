@@ -12,7 +12,7 @@ import {
 import { adaptive } from "@toss/tds-colors";
 import { Spacing } from "@toss/emotion-utils";
 
-import api from "../api";
+import { requestWithToken } from "../api";
 
 // Component imports
 import { AccessoryVariant } from "../components/AccessoryVariant";
@@ -93,9 +93,7 @@ export function CaseTrack() {
 
   // API handling
   const getCaseInfo = () => {
-    api
-      .get(`/api/cases/view/${caseID}/`)
-      .then((response) => response.data)
+    requestWithToken(`api/cases/view/${caseID}/`, "GET")
       .then((data) => setCaseData(data))
       .catch(() =>
         openToast("진행상황을 불러오지 못했어요.", {
@@ -105,21 +103,23 @@ export function CaseTrack() {
       );
   };
 
-  const postVariantDone = (id: number) => {
-    api.post(`/api/variants/completion-status/${id}/`).catch(() =>
-      openToast("저장하지 못했어요.", {
-        type: "top",
-        lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-      })
+  const postVariantDone = async (id: number) => {
+    requestWithToken(`api/variants/completion-status/${id}/`, "POST").catch(
+      () =>
+        openToast("저장하지 못했어요.", {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        })
     );
   };
 
-  const deleteVariantDone = (id: number) => {
-    api.delete(`/api/variants/completion-status/${id}/`).catch(() =>
-      openToast("삭제하지 못했어요.", {
-        type: "top",
-        lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-      })
+  const deleteVariantDone = async (id: number) => {
+    requestWithToken(`api/variants/completion-status/${id}/`, "DELETE").catch(
+      () =>
+        openToast("삭제하지 못했어요.", {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        })
     );
   };
 

@@ -3,7 +3,7 @@ import { List, useToast, Top, Skeleton } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 
 import { CaseItem } from "../components/CaseItem";
-import api from "../api";
+import { requestWithToken } from "../api";
 
 interface Case {
   id: number;
@@ -21,13 +21,13 @@ export function CaseList() {
     getCases();
   }, []);
 
-  const getCases = () => {
-    api
-      .get("/api/cases/")
-      .then((response) => response.data)
+  const getCases = async () => {
+    const url = "api/cases/"
+
+    requestWithToken(url, "GET")
       .then((data) => setCases(data))
-      .catch(() =>
-        openToast("케이스 목록을 불러오는데 실패했어요.", {
+      .catch((error) =>
+        openToast(error + "케이스 목록을 불러오는데 실패했어요.", {
           type: "top",
           lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
         })
