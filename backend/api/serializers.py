@@ -60,6 +60,11 @@ class CaseSerializer(serializers.ModelSerializer):
         
         return case
 
+class CaseListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Case
+        fields = ['id', 'name', 'description']
+
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device

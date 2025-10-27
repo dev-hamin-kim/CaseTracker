@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.utils import timezone
 
-from .serializers import UserSerializer, CaseSerializer, DeviceSerializer, VariantSerializer, VariantCompletionSerializer, AddVariantSerializer
+from .serializers import UserSerializer, CaseSerializer, CaseListSerializer, DeviceSerializer, VariantSerializer, VariantCompletionSerializer, AddVariantSerializer
 from .models import User, Case, Device, Variant, VariantCompletion
 
 # ===== USER VIEWS ======
@@ -47,7 +47,7 @@ class CaseDelete(generics.DestroyAPIView):
         return Case.objects.all()
 
 class CaseList(generics.ListAPIView):
-    serializer_class = CaseSerializer
+    serializer_class = CaseListSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
