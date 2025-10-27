@@ -16,6 +16,7 @@ export interface Variant {
   target_device_category: string;
   accessory: string;
   completed: boolean;
+  isLoading: boolean | null;
 }
 
 export type BrightnessLevel = "LOW" | "MEDIUM" | "HIGH";

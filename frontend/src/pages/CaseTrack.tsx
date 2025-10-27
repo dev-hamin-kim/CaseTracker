@@ -15,7 +15,7 @@ import { Spacing } from "@toss/emotion-utils";
 import { requestWithToken } from "../api";
 
 // Component imports
-import { AccessoryVariant } from "../components/AccessoryVariant";
+import { AccessoryVariant } from "../components/CaseTrack/AccessoryVariant";
 import { DeviceSelect } from "../components/CaseTrack/DeviceSelect";
 import { BrightnessTab } from "../components/CaseTrack/BrightnessTab";
 
@@ -44,13 +44,12 @@ export function CaseTrack() {
     setTabState(value);
   };
 
-  const onClickingAccessoryVariant = (id: number) => {
+  const onClickingAccessoryVariant = async (id: number) => {
     const selectedVariant = caseData?.variants
       .filter((variant) => variant.id === id)
       .at(0);
-    const isVariantDone = selectedVariant?.completed;
 
-    if (isVariantDone === undefined) {
+    if (selectedVariant === undefined) {
       openToast(
         "알 수 없는 문제가 발생했어요. 스크린샷을 관리자에게 공유해주세요.",
         {
@@ -61,10 +60,25 @@ export function CaseTrack() {
       return;
     }
 
-    if (isVariantDone) {
-      deleteVariantDone(id);
-    } else {
-      postVariantDone(id);
+    const isVariantDone = selectedVariant.completed;
+
+    try {
+      selectedVariant.isLoading = true;
+      if (isVariantDone) {
+        await deleteVariantDone(id);
+      } else {
+        await postVariantDone(id);
+      }
+    } catch (error) {
+      openToast(
+        "진행상황을 저장하는 중에 문제가 생겼어요. 스크린샷을 관리자에게 공유해주세요." + `${error}`,
+        {
+          type: "top",
+          lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
+        }
+      );
+    } finally {
+      selectedVariant.isLoading = false;
     }
 
     getCaseInfo();
