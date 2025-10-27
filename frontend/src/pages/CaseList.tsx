@@ -35,29 +35,29 @@ export function CaseList() {
   };
 
   return (
-  <div className="case-containter">
-          <Top
+    <div className="case-containter">
+      <Top
         title={
           <Top.TitleParagraph size={22} color={adaptive.grey900}>
             내가 진행하던 케이스에요.
           </Top.TitleParagraph>
         }
-        />
+      />
 
-    <List>
-    {!cases?.length ? (
-      <Skeleton pattern="listWithIconOnly" />
-    ) : (
-      cases.map((item) => (
-        <CaseItem
-          key={item.id}
-          id={item.id}
-          name={item.name}
-          description={item.description}
-        />
-      ))
-    )}
-    </List>
-  </div>
+      <List>
+        {!cases?.length ? (
+          <Skeleton pattern="listWithIconOnly" />
+        ) : (
+          cases.map((item) => (
+            <CaseItem
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              description={item.description}
+            />
+          ))
+        )}
+      </List>
+    </div>
   );
 }

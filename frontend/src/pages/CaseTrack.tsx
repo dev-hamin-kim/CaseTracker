@@ -5,7 +5,6 @@ import {
   Top,
   FixedBottomCTA,
   CTAButton,
-  SegmentedControl,
   useToast,
   // Menu,
 } from "@toss/tds-mobile";
@@ -83,7 +82,7 @@ export function CaseTrack() {
 
     getCaseInfo();
   };
-  
+
   // 여기부터
   const allDevices = caseData?.variants.map(
     (variant) => variant.target_device_category
@@ -170,11 +169,20 @@ export function CaseTrack() {
       </>
       <FixedBottomCTA.Double
         leftButton={
-          <CTAButton color="dark" variant="weak" display="block">
+          <CTAButton
+            color="dark"
+            variant="weak"
+            display="block"
+            disabled={true}
+          >
             닫기
           </CTAButton>
         }
-        rightButton={<CTAButton display="block">확인했어요</CTAButton>}
+        rightButton={
+          <CTAButton display="block" disabled={true}>
+            확인했어요
+          </CTAButton>
+        }
       />
     </>
   );

@@ -2,7 +2,7 @@ export interface Case {
   id: number;
   name: string;
   description: string;
-  added_by: string | null;
+  added_by: number | null;
   created_at: string;
   backlight: boolean;
   is_shown: boolean;
