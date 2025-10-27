@@ -2,7 +2,7 @@ export interface Case {
   id: number;
   name: string;
   description: string;
-  added_by: string | null;
+  added_by: number | null;
   created_at: string;
   backlight: boolean;
   is_shown: boolean;
@@ -16,6 +16,7 @@ export interface Variant {
   target_device_category: string;
   accessory: string;
   completed: boolean;
+  isLoading: boolean | null;
 }
 
 export type BrightnessLevel = "LOW" | "MEDIUM" | "HIGH";
