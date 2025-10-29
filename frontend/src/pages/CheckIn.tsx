@@ -3,7 +3,6 @@ import {
   Top,
   FixedBottomCTA,
   Button,
-  CTAButton,
 } from "@toss/tds-mobile";
 import { Spacing } from "@toss/emotion-utils";
 import { adaptive } from "@toss/tds-colors";
@@ -37,25 +36,24 @@ export function CheckIn() {
       </div>
       <FixedBottomCTA.Double
         rightButton={
-          <CTAButton
+          <Button
             color="primary"
             onTap={() => {
               navigate({ to: "/CaseList" });
             }}
           >
             케이스 목록 보기
-          </CTAButton>
+          </Button>
         }
-        loading={false}
         leftButton={
-          <CTAButton
+          <Button
             variant="weak"
             onTap={() => {
               navigate({ to: "/CreateCase" });
             }}
           >
             케이스 추가하기
-          </CTAButton>
+          </Button>
         }
         hasSafeAreaPadding={true}
       />
