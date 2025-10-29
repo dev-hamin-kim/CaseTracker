@@ -4,8 +4,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   Top,
   FixedBottomCTA,
-  CTAButton,
   useToast,
+  Button,
   // Menu,
 } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
@@ -169,19 +169,19 @@ export function CaseTrack() {
       </>
       <FixedBottomCTA.Double
         leftButton={
-          <CTAButton
+          <Button
             color="dark"
             variant="weak"
             display="block"
             disabled={true}
           >
             닫기
-          </CTAButton>
+          </Button>
         }
         rightButton={
-          <CTAButton display="block" disabled={true}>
+          <Button display="block" disabled={true}>
             확인했어요
-          </CTAButton>
+          </Button>
         }
       />
     </>

@@ -6,7 +6,7 @@ import {
   Top,
   TextField,
   FixedBottomCTA,
-  CTAButton,
+  Button,
 } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 import { Spacing } from "@toss/emotion-utils";
@@ -55,21 +55,21 @@ export function CreateCase() {
       />
       <FixedBottomCTA.Double
         leftButton={
-          <CTAButton
+          <Button
             color="dark"
             variant="weak"
             display="block"
             disabled={true}
           >
             (나중에 임시저장 구현하기)
-          </CTAButton>
+          </Button>
         }
-        rightButton={<CTAButton
+        rightButton={<Button
             display="block"
             onTap={() => {
                 setStepValue((prev) => prev + 1);
             }}
-            >다음</CTAButton>}
+            >다음</Button>}
       />
     </>
   );
