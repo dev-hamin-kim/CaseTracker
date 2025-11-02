@@ -3,3 +3,5 @@ vitetest
 node_modules
 frontend/.env
 backend/.env
+env
+*.ait
