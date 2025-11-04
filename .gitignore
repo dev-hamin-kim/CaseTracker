@@ -5,3 +5,4 @@ frontend/.env
 backend/.env
 env
 *.ait
+.DS_Store
