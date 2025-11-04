@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import {
   Top,
@@ -28,6 +28,8 @@ export const Route = createFileRoute()({
 
 // TODO: 완료한 케이스 보기 또는 보지 않기 추가?
 export function CaseTrack() {
+  const navigate = useNavigate();
+
   const { caseID } = Route.useParams();
   const { openToast } = useToast();
 
@@ -108,31 +110,44 @@ export function CaseTrack() {
   const getCaseInfo = () => {
     requestWithToken(`api/cases/view/${caseID}/`, "GET")
       .then((data) => setCaseData(data))
-      .catch(() =>
+      .catch((error) => {
         openToast("진행상황을 불러오지 못했어요.", {
           type: "top",
           lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-        })
-      );
+        });
+        if (error === "Refresh token expired") {
+          navigate({ to: "/Login" });
+        }
+      });
   };
 
   const postVariantDone = async (id: number) => {
     requestWithToken(`api/variants/completion-status/${id}/`, "POST").catch(
-      () =>
+      (error) => {
         openToast("저장하지 못했어요.", {
           type: "top",
           lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-        })
+        });
+
+        if (error === "Refresh token expired") {
+          navigate({ to: "/Login" });
+        }
+      }
     );
   };
 
   const deleteVariantDone = async (id: number) => {
     requestWithToken(`api/variants/completion-status/${id}/`, "DELETE").catch(
-      () =>
+      (error) => {
         openToast("삭제하지 못했어요.", {
           type: "top",
           lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-        })
+        });
+
+        if (error === "Refresh token expired") {
+          navigate({ to: "/Login" });
+        }
+      }
     );
   };
 

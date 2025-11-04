@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+
 import { List, useToast, Top, Skeleton, Border } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 
@@ -8,6 +10,8 @@ import { requestWithToken } from "../api";
 import { ProgressBarChart } from "./ProgressBarChart";
 
 export function CaseList() {
+  const navigate = useNavigate();
+
   const [cases, setCases] = useState<Case[]>([]);
   const [progressBarChartIsShown, setProgressBarChartIsShown] = useState(false);
   const [progressBarChartIsLoading, setProgressBarChartIsLoading] =
@@ -45,13 +49,39 @@ export function CaseList() {
 
     requestWithToken(url, "GET")
       .then((data) => setCases(data))
-      .catch((error) =>
+      .catch((error) => {
         openToast(error + "케이스 목록을 불러오는데 실패했어요.", {
           type: "top",
           lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
-        })
-      );
+        });
+
+        if (error === "Refresh token expired") {
+          navigate({ to: "/Login" });
+        }
+      });
   };
+
+  async function getCaseInfo(caseID: number): Promise<Case | undefined> {
+    try {
+      const data = (await requestWithToken(
+        `api/cases/view/${caseID}/`,
+        "GET"
+      )) as Case;
+
+      return data;
+    } catch (error) {
+      openToast("진행상황을 불러오지 못했어요.", {
+        type: "top",
+        lottie: "https://static.toss.im/lotties-common/error-yellow-spot.json",
+      });
+
+      console.error("Error fetching case info:", error);
+
+      if (error === "Refresh token expired") {
+        navigate({ to: "/Login" });
+      }
+    }
+  }
 
   return (
     <div className="case-containter">
