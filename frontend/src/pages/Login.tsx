@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BottomCTA, TextField, useToast } from "@toss/tds-mobile";
 import { Storage } from "@apps-in-toss/web-framework";
 
@@ -8,12 +8,22 @@ import { requestWithoutToken } from "../api";
 import type { SubmitProps } from "../api";
 
 export function Login() {
-  const [username, setUsername] = useState("ct_admin");
-  const [password, setPassword] = useState("password");
+  useEffect(() => {
+    loadRecentUsername()
+  }, []);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { openToast } = useToast();
+
+  const loadRecentUsername = async () => {
+    const recentUsername = await Storage.getItem('recentUsername')
+
+    setUsername(recentUsername ?? "")
+  }
 
   const handleSubmit = async (e: SubmitProps) => {
     setLoading(true);
@@ -23,7 +33,8 @@ export function Login() {
     try {
       const response = await requestWithoutToken("api/token/", "POST", e);
 
-      // await Storage.setItem('refresh', response.data.refresh as string);
+      await Storage.setItem('recentUsername', username)
+      await Storage.setItem('refresh', response.refresh as string);
       await Storage.setItem('access', response.access as string);
     } catch (error) {
       openToast(`error while login: ${error}`, {
