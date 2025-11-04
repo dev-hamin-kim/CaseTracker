@@ -72,7 +72,8 @@ export function CaseTrack() {
       }
     } catch (error) {
       openToast(
-        "진행상황을 저장하는 중에 문제가 생겼어요. 스크린샷을 관리자에게 공유해주세요." + `${error}`,
+        "진행상황을 저장하는 중에 문제가 생겼어요. 스크린샷을 관리자에게 공유해주세요." +
+          `${error}`,
         {
           type: "top",
           lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
@@ -184,12 +185,7 @@ export function CaseTrack() {
       </>
       <FixedBottomCTA.Double
         leftButton={
-          <Button
-            color="dark"
-            variant="weak"
-            display="block"
-            disabled={true}
-          >
+          <Button color="dark" variant="weak" display="block" disabled={true}>
             닫기
           </Button>
         }

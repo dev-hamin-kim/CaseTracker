@@ -22,7 +22,7 @@ export function CreateCase() {
         paddingTop="wide"
         activeStepIndex={stepValue}
       >
-        <ProgressStep title="케이스 이름" />
+        <ProgressStep title="케이스 선택" />
         <ProgressStep title="수집 대상 기기" />
         <ProgressStep title="악세사리" />
       </ProgressStepper>
@@ -51,25 +51,24 @@ export function CreateCase() {
         label="레이블"
         labelOption="sustain"
         value=""
-        placeholder="과한 표정(웃음 등)을 짓는 경우"
+        placeholder="예: 과한 표정(웃음 등)을 짓는 경우"
       />
       <FixedBottomCTA.Double
         leftButton={
-          <Button
-            color="dark"
-            variant="weak"
-            display="block"
-            disabled={true}
-          >
+          <Button color="dark" variant="weak" display="block" disabled={true}>
             (나중에 임시저장 구현하기)
           </Button>
         }
-        rightButton={<Button
+        rightButton={
+          <Button
             display="block"
             onTap={() => {
-                setStepValue((prev) => prev + 1);
+              setStepValue((prev) => prev + 1);
             }}
-            >다음</Button>}
+          >
+            다음
+          </Button>
+        }
       />
     </>
   );

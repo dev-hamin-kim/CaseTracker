@@ -45,7 +45,7 @@ export function CaseList() {
   }, []);
 
   const getCases = async () => {
-    const url = "api/cases/"
+    const url = "api/cases/";
 
     requestWithToken(url, "GET")
       .then((data) => setCases(data))
