@@ -45,7 +45,7 @@ export function CaseTrack() {
 
   const onClickingAccessoryVariant = async (id: number) => {
     const selectedVariant = caseData?.variants
-      .filter((variant) => variant.id === id)
+      ?.filter((variant) => variant.id === id)
       .at(0);
 
     if (selectedVariant === undefined) {
@@ -84,12 +84,12 @@ export function CaseTrack() {
   };
 
   // 여기부터
-  const allDevices = caseData?.variants.map(
+  const allDevices = caseData?.variants?.map(
     (variant) => variant.target_device_category
   );
   const targetDevices = [...new Set(allDevices)];
 
-  const variantsWithSelectedDevice = caseData?.variants.filter(
+  const variantsWithSelectedDevice = caseData?.variants?.filter(
     (variant) => variant.target_device_category === selectedDevice
   );
 

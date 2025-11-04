@@ -6,7 +6,7 @@ export interface Case {
   created_at: string;
   backlight: boolean;
   is_shown: boolean;
-  variants: [Variant];
+  variants?: Variant[];
 }
 
 export interface Variant {
