@@ -50,6 +50,7 @@ export async function isRefreshTokenValid() {
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({ token: refreshToken }),
     });
 
     if (!response.ok) {
@@ -59,11 +60,12 @@ export async function isRefreshTokenValid() {
     }
 
     if (response.ok) {
-      return true;
+          return true;
     }
+
   } catch (error) {
-    console.log(error);
-    throw error;
+    console.error("Token verification failed:", error);
+    return false;
   }
 }
 
