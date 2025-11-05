@@ -51,7 +51,7 @@ class CaseList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Case.objects.all()
+        return Case.objects.filter(is_shown=True)
     
 class HideCase(generics.UpdateAPIView):
     serializer_class = CaseSerializer
