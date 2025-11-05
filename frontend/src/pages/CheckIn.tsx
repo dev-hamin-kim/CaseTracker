@@ -17,12 +17,12 @@ export function CheckIn() {
       <Top
         title={
           <Top.TitleParagraph size={22} color={adaptive.grey900}>
-            케이스 진행도를 더 쉽게 파악해요.
+            아직 한창 공사중이에요.
           </Top.TitleParagraph>
         }
         subtitleBottom={
           <Top.SubtitleParagraph>
-            업무를 보다 쉽게 파악해요.
+            아래의 "케이스 목록 보기" 기능만 정상 작동해요.
           </Top.SubtitleParagraph>
         }
       />
@@ -30,7 +30,7 @@ export function CheckIn() {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Asset.Image
           frameShape={{ width: 200 }}
-          src="https://static.toss.im/icons/png/4x/menu-list.png"
+          src="https://static.toss.im/2d-emojis/png/4x/u1F6A7.png"
           aria-hidden={true}
         />
       </div>
