@@ -36,6 +36,37 @@ export async function requestWithoutToken(
   }
 }
 
+export async function isRefreshTokenValid() {
+  const targetURL = baseURL + "api/token/verify/";
+  const refreshToken = await Storage.getItem("refresh");
+
+  if (!refreshToken) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(targetURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      await Storage.removeItem("access");
+      await Storage.removeItem("refresh");
+      return false;
+    }
+
+    if (response.ok) {
+      return true;
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function requestWithToken(url: string, method: string) {
   const targetURL = baseURL + url;
   let accessToken = await Storage.getItem("access");
