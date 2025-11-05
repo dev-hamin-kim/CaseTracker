@@ -5,7 +5,6 @@ import {
   Top,
   FixedBottomCTA,
   useToast,
-  Button,
   // Menu,
 } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
@@ -84,6 +83,10 @@ export function CaseTrack() {
     }
 
     getCaseInfo();
+  };
+
+  const onTappingBottomCTA = () => {
+    navigate({ to: "/CaseList" });
   };
 
   // 여기부터
@@ -183,18 +186,14 @@ export function CaseTrack() {
           onClick={onClickingAccessoryVariant}
         />
       </>
-      <FixedBottomCTA.Double
-        leftButton={
-          <Button color="dark" variant="weak" display="block" disabled={true}>
-            닫기
-          </Button>
-        }
-        rightButton={
-          <Button display="block" disabled={true}>
-            확인했어요
-          </Button>
-        }
-      />
+      <FixedBottomCTA
+        color="dark"
+        variant="weak"
+        display="block"
+        onTap={onTappingBottomCTA}
+      >
+        돌아가기
+      </FixedBottomCTA>
     </>
   );
 }
