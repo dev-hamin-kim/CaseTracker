@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BottomCTA, TextField, useToast } from "@toss/tds-mobile";
+import { Top, BottomCTA, TextField, useToast } from "@toss/tds-mobile";
 import { Storage } from "@apps-in-toss/web-framework";
 
 import { useNavigate } from "@tanstack/react-router";
@@ -49,11 +49,27 @@ export function Login() {
   };
   return (
     <div>
+      <Top
+      title={
+        <Top.TitleParagraph>
+          로그인이 필요해요.
+        </Top.TitleParagraph>
+      }
+      subtitleBottom={
+        <Top.SubtitleTextButton>
+          아이디 혹은 비밀번호를 잊었나요?
+        </Top.SubtitleTextButton>
+      }
+      >
+
+
+      </Top>
       <div>
         <TextField
           variant="box"
           label="아이디"
           labelOption="sustain"
+          placeholder="asst + 사번 + @tosspartners.com"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></TextField>
@@ -62,6 +78,7 @@ export function Login() {
           variant="box"
           label="비밀번호"
           labelOption="sustain"
+          placeholder="기본값은 010-0000-0000 이예요."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></TextField.Password>
