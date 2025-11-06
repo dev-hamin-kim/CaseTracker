@@ -36,6 +36,8 @@ export function Login() {
       await Storage.setItem('recentUsername', username)
       await Storage.setItem('refresh', response.refresh as string);
       await Storage.setItem('access', response.access as string);
+
+      navigate({ to: "/CheckIn" });
     } catch (error) {
       openToast(`error while login: ${error}`, {
         type: "top",
@@ -43,7 +45,6 @@ export function Login() {
       });
     } finally {
       setLoading(false);
-      navigate({ to: "/CheckIn" });
     }
   };
   return (

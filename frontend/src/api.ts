@@ -84,8 +84,9 @@ export async function requestWithToken(url: string, method: string) {
     });
 
     if (response.status === 401) {
+      const refreshURL = baseURL + 'api/token/refresh/'
       // Try to refresh token
-      const refreshResponse = await fetch(`${baseURL}/api/token/refresh/`, {
+      const refreshResponse = await fetch(refreshURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
