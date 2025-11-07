@@ -1,42 +1,36 @@
 import React from "react";
-import { Top, Menu } from "@toss/tds-mobile";
+import { BottomSheet } from "@toss/tds-mobile";
 
 interface Props {
   devices: string[];
   onCheck: (checked: string) => void;
+  isOpen: boolean;
 }
 
-export function DeviceSelect({ devices, onCheck }: Props) {
-  const [open, setOpen] = React.useState(false);
-  const [checked, setChecked] = React.useState("");
+export function DeviceSelect({ devices, onCheck, isOpen }: Props) {
+  const [checked, setChecked] = React.useState<string | null>(null);
+
   return (
-    <Menu.Trigger
-      open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-      placement="right-end"
-      dropdown={
-        <Menu.Dropdown header={<Menu.Header>테스트할 기기</Menu.Header>}>
-          {devices.map((device) => (
-            // 나중에 이거 여백 좀 어떻게 해야 좀 덜 어색할듯
-            <Menu.DropdownCheckItem
-              checked={checked === device}
-              onCheckedChange={(isChecked: boolean) => {
-                if (isChecked) {
-                  setChecked(device);
-                  onCheck(device);
-                }
-              }}
-            >
-              {device}
-            </Menu.DropdownCheckItem>
-          ))}
-        </Menu.Dropdown>
-      }
-    >
-      <Top.LowerButton>
-        {checked ? `${checked} 사용 중` : "기기를 선택하세요"}
-      </Top.LowerButton>
-    </Menu.Trigger>
+    <>
+      <BottomSheet
+        open={isOpen}
+        header={
+          <BottomSheet.Header>테스트할 기기를 선택해주세요.</BottomSheet.Header>
+        }
+      >
+        <BottomSheet.Select
+          value={checked ?? undefined}
+          onChange={(e) => {
+            const selected = e.target.value;
+            setChecked(selected);
+            onCheck(selected);
+          }}
+          options={devices.map((device) => ({
+            name: device,
+            value: device,
+          }))}
+        />
+      </BottomSheet>
+    </>
   );
 }

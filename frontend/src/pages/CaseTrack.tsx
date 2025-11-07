@@ -5,7 +5,9 @@ import {
   Top,
   FixedBottomCTA,
   useToast,
-  // Menu,
+  Result,
+  Asset,
+  Button,
 } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 import { Spacing } from "@toss/emotion-utils";
@@ -37,11 +39,21 @@ export function CaseTrack() {
 
   // State of components
   const [tabState, setTabState] = useState(BrightnessLevelDisplay.HIGH);
-  const [selectedDevice, setSelectedDevice] = useState("");
+  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const [deviceSelectIsOpen, setDeviceSelectIsOpen] = useState(false);
 
   // onChange, onClick functions
   const onTabStateChange = (value: string) => {
     setTabState(value);
+  };
+
+  const onTappingDeviceSelect = () => {
+    setDeviceSelectIsOpen(true);
+  };
+
+  const onCheckingDevice = (checkedDevice: string) => {
+    setSelectedDevice(checkedDevice);
+    setDeviceSelectIsOpen(false);
   };
 
   const onClickingAccessoryVariant = async (id: number) => {
@@ -163,15 +175,24 @@ export function CaseTrack() {
             {caseData?.name}
           </Top.TitleParagraph>
         }
-        subtitleTop={
-          <Top.SubtitleTextButton>
-            {" "}
-            설명 보기 (아직 구현 X){" "}
-          </Top.SubtitleTextButton>
+        right={
+          selectedDevice ? (
+            <Top.RightButton color="primary" variant="weak" onTap={onTappingDeviceSelect}>
+              {selectedDevice} 사용 중
+            </Top.RightButton>
+          ) : (
+            <></>
+          )
         }
-        lower={
-          <DeviceSelect devices={targetDevices} onCheck={setSelectedDevice} />
-        }
+        // subtitleTop={
+        //   <Top.SubtitleTextButton>
+        //     {" "}
+        //     설명 보기 (아직 구현 X){" "}
+        //   </Top.SubtitleTextButton>
+        // }
+        // lower={
+        //   <DeviceSelect devices={targetDevices} onCheck={setSelectedDevice} />
+        // }
       />
       <div>
         <BrightnessTab
@@ -181,10 +202,27 @@ export function CaseTrack() {
       </div>
       <Spacing size={14} />
       <>
-        <AccessoryVariant
-          variants={finalAccessoryVariants}
-          onClick={onClickingAccessoryVariant}
-        />
+        {" "}
+        {selectedDevice ? (
+          <AccessoryVariant
+            variants={finalAccessoryVariants}
+            onClick={onClickingAccessoryVariant}
+          />
+        ) : (
+          <Result
+            figure={
+              <Asset.Icon
+                name="icn-info-line"
+                frameShape={Asset.frameShape.CleanH24}
+              />
+            }
+            title="사용중인 디바이스를 선택해주세요"
+            description={""}
+            button={
+              <Button onTap={onTappingDeviceSelect}>디바이스 선택하기</Button>
+            }
+          />
+        )}
       </>
       <FixedBottomCTA
         color="dark"
@@ -194,6 +232,11 @@ export function CaseTrack() {
       >
         돌아가기
       </FixedBottomCTA>
+      <DeviceSelect
+        devices={targetDevices}
+        onCheck={onCheckingDevice}
+        isOpen={deviceSelectIsOpen}
+      />
     </>
   );
 }
