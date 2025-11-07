@@ -4,7 +4,19 @@ from django.contrib.auth.models import AbstractUser
 
 # ===== USER MODELS ======
 class User(AbstractUser):
-    pass
+    unique_suffix = models.CharField(max_length=2, blank=True)
+
+    def get_full_name(self):
+        full_name = "%s%s" % (self.last_name, self.first_name)
+        return full_name.strip()
+    
+    def get_full_name_with_unique_suffix(self):
+        full_name = self.get_full_name()
+        full_name_with_unique_suffix = "%s%s" % (full_name, self.unique_suffix)
+        return full_name_with_unique_suffix
+    
+    def __str__(self):
+        return self.get_full_name_with_unique_suffix()
 
 # ===== CASE MODELS ======
 class Case(models.Model):
