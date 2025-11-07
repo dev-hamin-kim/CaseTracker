@@ -55,7 +55,7 @@ export function CaseList() {
           lottie: `https://static.toss.im/lotties-common/error-yellow-spot.json`,
         });
 
-        if (error === "Refresh token expired") {
+        if (error == "Refresh token expired") {
           navigate({ to: "/Login" });
         }
       });

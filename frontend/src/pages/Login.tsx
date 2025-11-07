@@ -69,7 +69,7 @@ export function Login() {
           variant="box"
           label="아이디"
           labelOption="sustain"
-          placeholder="asst + 사번 + @tosspartners.com"
+          placeholder="asst + 사번"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></TextField>
@@ -78,7 +78,7 @@ export function Login() {
           variant="box"
           label="비밀번호"
           labelOption="sustain"
-          placeholder="기본값은 010-0000-0000 이예요."
+          placeholder="기본값은 facepaydata123 이에요."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></TextField.Password>

@@ -22,7 +22,7 @@ export function CheckIn() {
         }
         subtitleBottom={
           <Top.SubtitleParagraph>
-            아래의 "케이스 목록 보기" 기능만 정상 작동해요.
+            곧 더 많은 기능으로 만나요!
           </Top.SubtitleParagraph>
         }
       />
