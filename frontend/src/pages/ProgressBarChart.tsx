@@ -23,12 +23,15 @@ export function ProgressBarChart({ variants }: Props) {
 
   // Prepare chart data
   const chartData = Object.entries(countsByCategory).map(
-    ([category, stats]) => ({
-      maxValue: 1,
-      value: stats.completed / stats.total,
-      barAnnotation: `${Math.round((stats.completed / stats.total) * 100)}%`,
-      label: category,
-    })
+    ([category, stats]) => {
+      const percentage = Math.round((stats.completed / stats.total) * 100);
+      return {
+        maxValue: 1,
+        value: stats.completed / stats.total,
+        barAnnotation: `${percentage === 100 ? "완료" : `${percentage}%`}`,
+        label: category,
+      };
+    }
   );
 
   return (
