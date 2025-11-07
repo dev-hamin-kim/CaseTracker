@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Asset, GridList, Skeleton, Loader } from "@toss/tds-mobile";
 import { colors } from "@toss/tds-colors";
 import type { Variant } from "./constants";
@@ -18,18 +17,12 @@ const AccessoryDisplay: Record<Accessories, string> = {
 };
 
 export function AccessoryVariant({ variants, onClick }: Props) {
-  const [selectedID, setSelectedID] = useState<number | null>(null);
 
   if (!variants?.length) {
     return <Skeleton pattern="listOnly" />;
   }
 
   const handleClick = (id: number) => {
-    if (selectedID === null) {
-      setSelectedID(id);
-    } else {
-      setSelectedID(null);
-    }
     onClick(id);
   };
 
@@ -51,6 +44,7 @@ export function AccessoryVariant({ variants, onClick }: Props) {
               }
               onClick={() => {
                 if (!item.isLoading) {
+                  item.isLoading = true
                   handleClick(item.id);
                 }
               }}
@@ -63,7 +57,9 @@ export function AccessoryVariant({ variants, onClick }: Props) {
                 transition: "background-color 0.2s ease",
               }}
             >
-              {item.isLoading ? "" : AccessoryDisplay[item.accessory as Accessories]}
+              {item.isLoading
+                ? ""
+                : AccessoryDisplay[item.accessory as Accessories]}
             </GridList.Item>
           );
         })}
