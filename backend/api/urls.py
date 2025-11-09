@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 urlpatterns = [
+    path("user/fullname/", views.UserFullNameView.as_view(), name="user-fullname"),
 
     # ===== CASES URLS ======
     path("cases/", views.CaseList.as_view(), name="case-list"),

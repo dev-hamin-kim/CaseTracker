@@ -27,6 +27,14 @@ class HideUserView(generics.UpdateAPIView):
         else:
             print(serializer.errors)
 
+class UserFullNameView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        full_name = user.get_full_name_with_unique_suffix()
+        return Response({"fullname": full_name})
+
 # ===== CASE VIEWS ======
 
 class CreateCase(generics.CreateAPIView):
