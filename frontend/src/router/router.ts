@@ -2,15 +2,16 @@ import {
   createRouter,
   createRoute,
   createRootRoute,
-} from '@tanstack/react-router';
+} from "@tanstack/react-router";
 
-import { Intro } from '../pages/Intro';
-import { Login } from '../pages/Login';
-import { CheckIn } from '../pages/CheckIn';
-import { CheckInResult } from '../pages/CheckInResult';
-import { CaseTrack } from '../pages/CaseTrack';
-import { CaseList } from '../pages/CaseList';
-import { CreateCase } from '../pages/CreateCase';
+import { Intro } from "../pages/Intro";
+import { Login } from "../pages/Login";
+import { CheckIn } from "../pages/CheckIn";
+import { CheckInResult } from "../pages/CheckInResult";
+import { CaseTrack } from "../pages/CaseTrack";
+import { CaseList } from "../pages/CaseList";
+import { CreateCase } from "../pages/CreateCase";
+import { MyPage } from "../pages/MyPage";
 
 // import { Home } from '../pages/Home';
 
@@ -18,44 +19,50 @@ const rootRoute = createRootRoute();
 
 const introRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/',
-  component: Intro
-})
+  path: "/",
+  component: Intro,
+});
 
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/Login',
-  component: Login
-})
+  path: "/Login",
+  component: Login,
+});
 
 const checkInRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/CheckIn',
+  path: "/CheckIn",
   component: CheckIn,
 });
 
 const checkInResultRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/CheckInResult',
+  path: "/CheckInResult",
   component: CheckInResult,
 });
 
 const caseTrackRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/CaseTrack/$caseID',
+  path: "/CaseTrack/$caseID",
   component: CaseTrack,
 });
 
 const caseListRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/CaseList',
+  path: "/CaseList",
   component: CaseList,
 });
 
 const createCaseRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/CreateCase',
+  path: "/CreateCase",
   component: CreateCase,
+});
+
+const myPageRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/MyPage",
+  component: MyPage,
 });
 // const workRoute = createRoute({
 //   getParentRoute: () => rootRoute,
@@ -63,5 +70,14 @@ const createCaseRoute = createRoute({
 //   component: Home,
 // });
 
-const routeTree = rootRoute.addChildren([introRoute, loginRoute, checkInRoute, checkInResultRoute, caseTrackRoute, caseListRoute, createCaseRoute]);
+const routeTree = rootRoute.addChildren([
+  introRoute,
+  loginRoute,
+  checkInRoute,
+  checkInResultRoute,
+  caseTrackRoute,
+  caseListRoute,
+  createCaseRoute,
+  myPageRoute,
+]);
 export const router = createRouter({ routeTree });

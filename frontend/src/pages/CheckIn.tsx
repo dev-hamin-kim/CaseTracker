@@ -48,11 +48,12 @@ export function CheckIn() {
         leftButton={
           <Button
             variant="weak"
+            disabled={false}
             onTap={() => {
-              navigate({ to: "/CreateCase" });
+              navigate({ to: "/MyPage" });
             }}
           >
-            케이스 추가하기
+            내 정보 관리
           </Button>
         }
         hasSafeAreaPadding={true}
