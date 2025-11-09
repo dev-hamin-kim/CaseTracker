@@ -1,15 +1,25 @@
-import {
-  Asset,
-  Top,
-  FixedBottomCTA,
-  Button,
-} from "@toss/tds-mobile";
+import { useEffect, useState } from "react";
+
+import { Asset, Top, FixedBottomCTA, Button } from "@toss/tds-mobile";
 import { Spacing } from "@toss/emotion-utils";
 import { adaptive } from "@toss/tds-colors";
 import { useNavigate } from "@tanstack/react-router";
 
+import { requestWithToken } from "../api";
+
 export function CheckIn() {
+  const [username, setUsername] = useState("사용자");
+
   const navigate = useNavigate();
+
+  const getUsername = async () => {
+    requestWithToken("api/user/fullname/", "GET")
+    .then((data) => setUsername(data.fullname as string))
+  };
+
+  useEffect(() => {
+    getUsername()
+  }, []);
 
   return (
     <>
@@ -17,12 +27,12 @@ export function CheckIn() {
       <Top
         title={
           <Top.TitleParagraph size={22} color={adaptive.grey900}>
-            아직 한창 공사중이에요.
+            {username}님 안녕하세요,
           </Top.TitleParagraph>
         }
         subtitleBottom={
           <Top.SubtitleParagraph>
-            곧 더 많은 기능으로 만나요!
+            오늘 하루도 화이팅이에요!
           </Top.SubtitleParagraph>
         }
       />
@@ -30,7 +40,7 @@ export function CheckIn() {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Asset.Image
           frameShape={{ width: 200 }}
-          src="https://static.toss.im/2d-emojis/png/4x/u1F6A7.png"
+          src="https://static.toss.im/2d-emojis/png/4x/u1FAB4.png"
           aria-hidden={true}
         />
       </div>
