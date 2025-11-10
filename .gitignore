@@ -6,3 +6,5 @@ backend/.env
 env
 *.ait
 .DS_Store
+backend/api/management/csv
+backend/api/management/logs
