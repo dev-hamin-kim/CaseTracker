@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 # ===== USER MODELS ======
 class User(AbstractUser):
     unique_suffix = models.CharField(max_length=2, blank=True)
+    english_name = models.CharField(max_length=150, blank=True)
 
     def get_full_name(self):
         full_name = "%s%s" % (self.last_name, self.first_name)
