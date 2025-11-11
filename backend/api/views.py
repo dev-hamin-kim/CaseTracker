@@ -1,8 +1,8 @@
-from django.shortcuts import render
 from rest_framework import generics, views, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.utils import timezone
+from datetime import date
 
 from .serializers import UserSerializer, CaseSerializer, CaseListSerializer, DeviceSerializer, VariantSerializer, VariantCompletionSerializer, AddVariantSerializer
 from .models import User, Case, Device, Variant, VariantCompletion
@@ -34,7 +34,28 @@ class UserFullNameView(views.APIView):
         user = request.user
         full_name = user.get_full_name_with_unique_suffix()
         return Response({"fullname": full_name})
+    
+class UserDailyCompletionView(views.APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        user = request.user
+
+        today = timezone.localdate()
+        start_of_day = timezone.make_aware(
+            timezone.datetime.combine(today, timezone.datetime.min.time())
+        )
+        end_of_day = timezone.make_aware(
+            timezone.datetime.combine(today, timezone.datetime.max.time())
+        )
+
+        completed_today = VariantCompletion.objects.filter(
+            user=user,
+            completed=True,
+            completed_at__range=(start_of_day, end_of_day)
+        ).count()
+
+        return Response({"count": completed_today})
 # ===== CASE VIEWS ======
 
 class CreateCase(generics.CreateAPIView):

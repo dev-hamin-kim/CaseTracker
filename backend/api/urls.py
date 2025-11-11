@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("user/fullname/", views.UserFullNameView.as_view(), name="user-fullname"),
+    path("user/completion/daily/", views.UserDailyCompletionView.as_view(), name="user-daily-completion"),
 
     # ===== CASES URLS ======
     path("cases/", views.CaseList.as_view(), name="case-list"),
