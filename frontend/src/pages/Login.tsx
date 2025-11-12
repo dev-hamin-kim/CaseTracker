@@ -31,7 +31,7 @@ export function Login() {
     await Storage.clearItems()
 
     try {
-      const response = await requestWithoutToken("api/token/", "POST", e);
+      const response = await requestWithoutToken("token/", "POST", e);
 
       await Storage.setItem('recentUsername', username)
       await Storage.setItem('refresh', response.refresh as string);

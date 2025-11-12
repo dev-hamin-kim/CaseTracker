@@ -37,7 +37,7 @@ export async function requestWithoutToken(
 }
 
 export async function isRefreshTokenValid() {
-  const targetURL = baseURL + "api/token/verify/";
+  const targetURL = baseURL + "token/verify/";
   const refreshToken = await Storage.getItem("refresh");
 
   if (!refreshToken) {
@@ -84,7 +84,7 @@ export async function requestWithToken(url: string, method: string) {
     });
 
     if (response.status === 401) {
-      const refreshURL = baseURL + 'api/token/refresh/'
+      const refreshURL = baseURL + 'token/refresh/'
       // Try to refresh token
       const refreshResponse = await fetch(refreshURL, {
         method: "POST",

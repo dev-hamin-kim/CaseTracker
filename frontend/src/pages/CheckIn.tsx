@@ -13,8 +13,10 @@ export function CheckIn() {
   const navigate = useNavigate();
 
   const getUsername = async () => {
-    requestWithToken("api/user/fullname/", "GET")
-    .then((data) => setUsername(data.fullname as string))
+    requestWithToken("user/fullname/", "GET").then((data) =>
+      setUsername(data.fullname as string)
+    );
+  };
   };
 
   useEffect(() => {

@@ -124,7 +124,7 @@ export function CaseTrack() {
 
   // API handling
   const getCaseInfo = () => {
-    requestWithToken(`api/cases/view/${caseID}/`, "GET")
+    requestWithToken(`cases/view/${caseID}/`, "GET")
       .then((data) => setCaseData(data))
       .catch((error) => {
         openToast("진행상황을 불러오지 못했어요.", {
@@ -138,7 +138,7 @@ export function CaseTrack() {
   };
 
   const postVariantDone = async (id: number) => {
-    requestWithToken(`api/variants/completion-status/${id}/`, "POST").catch(
+    requestWithToken(`variants/completion-status/${id}/`, "POST").catch(
       (error) => {
         openToast("저장하지 못했어요.", {
           type: "top",
@@ -153,7 +153,7 @@ export function CaseTrack() {
   };
 
   const deleteVariantDone = async (id: number) => {
-    requestWithToken(`api/variants/completion-status/${id}/`, "DELETE").catch(
+    requestWithToken(`variants/completion-status/${id}/`, "DELETE").catch(
       (error) => {
         openToast("삭제하지 못했어요.", {
           type: "top",

@@ -45,7 +45,7 @@ export function CaseList() {
   }, []);
 
   const getCases = async () => {
-    const url = "api/cases/";
+    const url = "cases/";
 
     requestWithToken(url, "GET")
       .then((data) => setCases(data))
@@ -64,7 +64,7 @@ export function CaseList() {
   async function getCaseInfo(caseID: number): Promise<Case | undefined> {
     try {
       const data = (await requestWithToken(
-        `api/cases/view/${caseID}/`,
+        `cases/view/${caseID}/`,
         "GET"
       )) as Case;
 
