@@ -6,9 +6,11 @@ import { adaptive } from "@toss/tds-colors";
 import { useNavigate } from "@tanstack/react-router";
 
 import { requestWithToken } from "../api";
+import { getFlavorText } from "../components/FlavorText";
 
 export function CheckIn() {
   const [username, setUsername] = useState("사용자");
+  const [completedCases, setCompletedCases] = useState(0);
 
   const navigate = useNavigate();
 
@@ -17,12 +19,19 @@ export function CheckIn() {
       setUsername(data.fullname as string)
     );
   };
+
+  const getCompletedCount = async () => {
+    requestWithToken("user/completion/daily/", "GET").then((data) =>
+      setCompletedCases(data.count as number)
+    );
   };
 
   useEffect(() => {
-    getUsername()
+    getUsername();
+    getCompletedCount();
   }, []);
 
+  const easterEggText = getFlavorText(completedCases);
   return (
     <>
       <Spacing size={14} />
@@ -33,9 +42,16 @@ export function CheckIn() {
           </Top.TitleParagraph>
         }
         subtitleBottom={
+          <>
           <Top.SubtitleParagraph>
-            오늘 하루도 화이팅이에요!
+            {
+              
+            completedCases > 0
+              ? `오늘 완료한 케이스는 ${completedCases}개예요.`
+              : "오늘 하루도 화이팅이에요!"}
           </Top.SubtitleParagraph>
+          <Top.SubtitleParagraph size={13} color={adaptive.grey300}>{easterEggText}</Top.SubtitleParagraph>
+          </>
         }
       />
       <Spacing size={98} />
