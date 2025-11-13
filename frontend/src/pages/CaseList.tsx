@@ -1,22 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
 import { List, useToast, Top, Skeleton, Border } from "@toss/tds-mobile";
 import { adaptive } from "@toss/tds-colors";
 
+import { useDevice } from "../contexts/useDeviceCategory";
+
 import type { Case } from "../components/CaseTrack/constants";
 import { CaseItem } from "../components/CaseItem";
 import { requestWithToken } from "../api";
 import { ProgressBarChart } from "./ProgressBarChart";
+import { DeviceSelect } from "../components/CaseTrack/DeviceSelect";
 
 export function CaseList() {
   const navigate = useNavigate();
+  const { openToast } = useToast();
 
   const [cases, setCases] = useState<Case[]>([]);
+  const { selectedDevice, setSelectedDevice } = useDevice();
+
+  const targetDevices = useMemo(
+    () => [
+      ...new Set(
+        cases.flatMap(
+          (c) => c.variants?.map((v) => v.target_device_category) ?? []
+        )
+      ),
+    ],
+    [cases]
+  );
+
+  // State of components
   const [progressBarChartIsShown, setProgressBarChartIsShown] = useState(false);
   const [progressBarChartIsLoading, setProgressBarChartIsLoading] =
     useState(false);
-  const { openToast } = useToast();
+  const [deviceSelectIsOpen, setDeviceSelectIsOpen] = useState(false);
 
   const onTappingTopLowerButton = async () => {
     try {
@@ -38,6 +56,15 @@ export function CaseList() {
     }
 
     setProgressBarChartIsShown(!progressBarChartIsShown);
+  };
+
+  const onTappingDeviceSelect = () => {
+    setDeviceSelectIsOpen(true);
+  };
+
+  const onCheckingDevice = (checkedDevice: string) => {
+    setSelectedDevice(checkedDevice);
+    setDeviceSelectIsOpen(false);
   };
 
   useEffect(() => {
@@ -88,17 +115,33 @@ export function CaseList() {
       <Top
         title={
           <Top.TitleParagraph size={22} color={adaptive.grey900}>
-            내가 진행하던 케이스에요.
+            진행중인 케이스에요.
           </Top.TitleParagraph>
         }
         lower={
-          <Top.LowerButton
-            onTap={onTappingTopLowerButton}
-            loading={progressBarChartIsLoading}
-          >
-            {progressBarChartIsShown ? "가리기" : "디바이스별 진행상황 보기"}
-          </Top.LowerButton>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Top.LowerButton
+              onTap={onTappingTopLowerButton}
+              loading={progressBarChartIsLoading}
+            >
+              {progressBarChartIsShown
+                ? "가리기"
+                : selectedDevice
+                ? "조도별 진행상황 보기"
+                : "디바이스별 진행상황 보기"}
+            </Top.LowerButton>
+          </div>
         }
+        right={ progressBarChartIsShown ? 
+          <Top.RightButton
+            color="primary"
+            variant="weak"
+            onTap={onTappingDeviceSelect}
+          >
+            {selectedDevice ? selectedDevice + " 사용 중" : "디바이스 선택"}
+          </Top.RightButton> : <></>
+        }
+
         // subtitleBottom={<Top.SubtitleParagraph size={13}>어떤 디바이스를 고를지 고민인가요?</Top.SubtitleParagraph>}
       />
 
@@ -117,7 +160,10 @@ export function CaseList() {
 
               {progressBarChartIsShown ? (
                 <>
-                  <ProgressBarChart variants={item.variants} />
+                  <ProgressBarChart
+                    variants={item.variants}
+                    selectedDevice={selectedDevice}
+                  />
                   <Border variant="height16" />
                 </>
               ) : null}
@@ -125,6 +171,12 @@ export function CaseList() {
           ))
         )}
       </List>
+      <DeviceSelect
+        devices={targetDevices}
+        onCheck={onCheckingDevice}
+        isOpen={deviceSelectIsOpen}
+        onClose={() => setDeviceSelectIsOpen(false)}
+      />
     </div>
   );
 }

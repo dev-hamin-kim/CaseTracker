@@ -238,6 +238,7 @@ export function CaseTrack() {
         devices={targetDevices}
         onCheck={onCheckingDevice}
         isOpen={deviceSelectIsOpen}
+        onClose={() => setDeviceSelectIsOpen(false)}
       />
     </>
   );
