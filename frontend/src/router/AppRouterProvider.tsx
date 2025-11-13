@@ -1,6 +1,11 @@
-import { RouterProvider } from '@tanstack/react-router';
-import { router } from './router';
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "./router";
+import { DeviceProvider } from "../contexts/DeviceProvider";
 
 export function AppRouterProvider() {
-  return <RouterProvider router={router} />;
+  return (
+    <DeviceProvider>
+      <RouterProvider router={router} />;
+    </DeviceProvider>
+  );
 }

@@ -14,6 +14,8 @@ import { Spacing } from "@toss/emotion-utils";
 
 import { requestWithToken } from "../api";
 
+import { useDevice } from "../contexts/useDeviceCategory";
+
 // Component imports
 import { AccessoryVariant } from "../components/CaseTrack/AccessoryVariant";
 import { DeviceSelect } from "../components/CaseTrack/DeviceSelect";
@@ -39,7 +41,7 @@ export function CaseTrack() {
 
   // State of components
   const [tabState, setTabState] = useState(BrightnessLevelDisplay.HIGH);
-  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const { selectedDevice, setSelectedDevice } = useDevice();
   const [deviceSelectIsOpen, setDeviceSelectIsOpen] = useState(false);
 
   // onChange, onClick functions
