@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "@tanstack/react-router";
 
 import { List, useToast, Top, Skeleton, Border } from "@toss/tds-mobile";
@@ -56,6 +56,15 @@ export function CaseList() {
     }
 
     setProgressBarChartIsShown(!progressBarChartIsShown);
+  };
+
+  const onTappingDeviceSelect = () => {
+    setDeviceSelectIsOpen(true);
+  };
+
+  const onCheckingDevice = (checkedDevice: string) => {
+    setSelectedDevice(checkedDevice);
+    setDeviceSelectIsOpen(false);
   };
 
   useEffect(() => {
@@ -151,7 +160,10 @@ export function CaseList() {
 
               {progressBarChartIsShown ? (
                 <>
-                  <ProgressBarChart variants={item.variants} />
+                  <ProgressBarChart
+                    variants={item.variants}
+                    selectedDevice={selectedDevice}
+                  />
                   <Border variant="height16" />
                 </>
               ) : null}
