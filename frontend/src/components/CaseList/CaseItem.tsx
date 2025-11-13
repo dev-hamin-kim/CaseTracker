@@ -37,7 +37,7 @@ export function CaseItem({ id, name, description }: Props) {
         />
       }
       right={
-        <Button size="small" variant="weak" onClick={onClick}>
+        <Button size="small" color="dark" variant="weak" onClick={onClick}>
           보기
         </Button>
       }

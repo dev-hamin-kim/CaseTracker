@@ -7,9 +7,9 @@ import { adaptive } from "@toss/tds-colors";
 import { useDevice } from "../contexts/useDeviceCategory";
 
 import type { Case } from "../components/CaseTrack/constants";
-import { CaseItem } from "../components/CaseItem";
+import { CaseItem } from "../components/CaseList/CaseItem";
 import { requestWithToken } from "../api";
-import { ProgressBarChart } from "./ProgressBarChart";
+import { ProgressBarChart } from "../components/CaseList/ProgressBarChart";
 import { DeviceSelect } from "../components/CaseTrack/DeviceSelect";
 
 export function CaseList() {
