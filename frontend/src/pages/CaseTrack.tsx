@@ -127,7 +127,7 @@ export function CaseTrack() {
 
   // API handling
   const getCaseInfo = () => {
-    requestWithToken(`cases/view/${caseID}/`, "GET")
+    requestWithToken(`cases/${caseID}/`, "GET")
       .then((data) => setCaseData(data))
       .catch((error) => {
         openToast("진행상황을 불러오지 못했어요.", {

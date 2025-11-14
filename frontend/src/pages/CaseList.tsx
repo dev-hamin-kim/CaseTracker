@@ -91,7 +91,7 @@ export function CaseList() {
   async function getCaseInfo(caseID: number): Promise<Case | undefined> {
     try {
       const data = (await requestWithToken(
-        `cases/view/${caseID}/`,
+        `cases/${caseID}/`,
         "GET"
       )) as Case;
 
