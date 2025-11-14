@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 
 import {
   Top,
@@ -32,6 +32,7 @@ export const Route = createFileRoute()({
 // TODO: 완료한 케이스 보기 또는 보지 않기 추가?
 export function CaseTrack() {
   const navigate = useNavigate();
+  const router = useRouter();
 
   const { caseID } = Route.useParams();
   const { openToast } = useToast();
@@ -100,7 +101,7 @@ export function CaseTrack() {
   };
 
   const onTappingBottomCTA = () => {
-    navigate({ to: "/CaseList" });
+    router.history.back();
   };
 
   // 여기부터

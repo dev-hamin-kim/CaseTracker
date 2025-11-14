@@ -15,7 +15,9 @@ export function DeviceSelect({ devices, onCheck, isOpen, onClose }: Props) {
     <>
       <BottomSheet
         open={isOpen}
-        // onClose={onClose}
+        onClose={() => {
+          setChecked(null);
+        }}
         header={
           <BottomSheet.Header>디바이스를 선택해주세요.</BottomSheet.Header>
         }

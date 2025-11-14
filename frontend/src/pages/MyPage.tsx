@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 
 import {
   Top,
@@ -16,12 +16,13 @@ import { Spacing } from "@toss/emotion-utils";
 
 export function MyPage() {
   const navigate = useNavigate();
+  const router = useRouter();
   const { openToast } = useToast();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const onTappingBottomCTA = () => {
-    navigate({ to: "/CheckIn" });
+    router.history.back();
   };
 
   const onClickingLogout = () => {
@@ -101,7 +102,7 @@ export function MyPage() {
         onClickingLogout={async () => {
           await Storage.removeItem("access");
           await Storage.removeItem("refresh");
-          navigate({ to: "/" });
+          navigate({ to: "/", replace: true });
         }}
       />
     </>
