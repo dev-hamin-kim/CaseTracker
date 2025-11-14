@@ -3,14 +3,14 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 urlpatterns = [
+    # ===== USER URLS ======
+    # TODO - refactor to be more RESTful
     path("user/fullname/", views.UserFullNameView.as_view(), name="user-fullname"),
     path("user/completion/daily/", views.UserDailyCompletionView.as_view(), name="user-daily-completion"),
 
     # ===== CASES URLS ======
-    path("cases/", views.CaseList.as_view(), name="case-list"),
-    path("cases/create/", views.CreateCase.as_view(), name="create-case"),
-    path("cases/delete/<int:pk>/", views.CaseDelete.as_view(), name="delete-case"),
-    path("cases/view/<int:pk>/", views.ViewCase.as_view(), name="view-case"),
+    path("cases/", views.CaseListCreateView.as_view(), name="cases"),
+    path("cases/<int:pk>/", views.CaseRetrieveUpdateDestroyView.as_view(), name="delete-case"),
 
     # ===== DEVICE URLS ======
     path("devices/create/", views.DeviceListCreate.as_view(), name="create-device"),

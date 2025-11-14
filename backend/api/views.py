@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.utils import timezone
 from datetime import date
 
-from .serializers import UserSerializer, CaseSerializer, CaseListSerializer, DeviceSerializer, VariantSerializer, VariantCompletionSerializer, AddVariantSerializer
+from .serializers import UserSerializer, CaseSerializer, DeviceSerializer, VariantSerializer, VariantCompletionSerializer, AddVariantSerializer
 from .models import User, Case, Device, Variant, VariantCompletion
 
 # ===== USER VIEWS ======
@@ -57,64 +57,38 @@ class UserDailyCompletionView(views.APIView):
 
         return Response({"count": completed_today})
 # ===== CASE VIEWS ======
-
-class CreateCase(generics.CreateAPIView):
+class CaseListCreateView(generics.ListCreateAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [IsAdminUser]
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
+    
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            return Case.objects.filter(is_shown=True).only('id', 'name', 'description')
+        return Case.objects.all()
     
     def perform_create(self, serializer):
         if serializer.is_valid():
             serializer.save(added_by=self.request.user)
         else:
             print(serializer.errors)
-        
-class CaseDelete(generics.DestroyAPIView):
+
+class CaseRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CaseSerializer
-    permission_classes = [IsAdminUser]
 
-    def get_queryset(self):
-        return Case.objects.all()
-
-class CaseList(generics.ListAPIView):
-    serializer_class = CaseListSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Case.objects.filter(is_shown=True)
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        return [IsAdminUser()]
     
-class HideCase(generics.UpdateAPIView):
-    serializer_class = CaseSerializer
-    permission_classes = [IsAdminUser]
-
     def get_queryset(self):
-        return Case.objects.all()
-    
-    def perform_update(self, serializer):
-        if serializer.is_valid():
-            serializer.save(is_shown=False)
-        else:
-            print(serializer.errors)
-
-class ViewCase(generics.RetrieveAPIView):
-    serializer_class = CaseSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Case.objects.prefetch_related(
-            'variants__target_device'
-        ).select_related('added_by')
-    
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
-    
-class ViewCaseVariants(generics.RetrieveAPIView):
-    serializer_class = CaseSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
+        if self.request.method == 'GET':
+            return Case.objects.filter(is_shown=True).prefetch_related(
+                'variants__target_device'
+            ).select_related('added_by')
         return Case.objects.all()
 
 # ===== DEVICE VIEWS ======
