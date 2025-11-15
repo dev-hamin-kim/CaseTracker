@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Case, Device, Variant, VariantPreset, VariantPresetItem, VariantCompletion
+from .models import User, Case, Device, Variant, VariantPreset, VariantPresetItem, VariantCompletion, AttendanceRecord
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -145,3 +145,9 @@ class VariantCompletionSerializer(serializers.ModelSerializer):
 #         for variant_data in variants_data:
 #             Variant.objects.create(case=case, **variant_data)
 #         return case
+
+class AttendanceRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttendanceRecord
+        fields = ['id', 'user', 'date', 'clock_in_time', 'clock_out_time', "completed_vaiants_count"]
+        read_only_fields = ['user', 'date', 'clock_in_time', 'clock_out_time', 'completed_variants_count']

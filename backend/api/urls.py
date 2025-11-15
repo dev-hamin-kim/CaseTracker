@@ -23,4 +23,9 @@ urlpatterns = [
     path("variants/completion-status/<int:pk>/", views.CompleteVariantView.as_view(), name="complete-variant"),
 
     path("cases/<int:pk>/add-variants/", views.AddVariantToCaseView.as_view(), name="add-variants-to-case"),
+
+    # ===== ATTENDANCE URLS ======
+    path("attendance", views.AttendanceView.as_view(), name="attendance-status"),
+    path("attendance/clock-in/", views.ClockInView.as_view(), name="clock-in"),
+    path("attendance/clock-out/", views.ClockOutView.as_view(), name="clock-out"),
 ]
