@@ -98,8 +98,14 @@ class VariantCompletion(models.Model):
     class Meta:
         unique_together = ('user', 'variant')
 
+class AttendanceRecord(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name="attendance_records")
+    date = models.DateField()
+    clock_in_time = models.TimeField(null=True, blank=True)
+    clock_out_time = models.TimeField(null=True, blank=True)
+    completed_variants_count = models.PositiveIntegerField(default=0)
 
-
-# class CaseAssigned(models.Model):
-#     to_collector = models.ForeignKey(Collector, on_delete=models.CASCADE)
-
+    class Meta:
+        unique_together = ('user', 'date')
