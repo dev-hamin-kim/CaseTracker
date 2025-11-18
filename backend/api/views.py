@@ -328,3 +328,38 @@ class ClockOutView(views.APIView):
         record.save()
 
         return Response(AttendanceRecordSerializer(record).data)
+    
+class AttendanceRecordView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        date_param = request.query_params.get("date")
+        username = request.query_params.get("username")
+        user_id = request.query_params.get("user_id")
+
+        if date_param:
+            try:
+                target_date = timezone.datetime.fromisoformat(date_param).date()
+            except ValueError:
+                return Response(
+                    {"detail": "Invalid date format. Use YYYY-MM-DD."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        else:
+            target_date = timezone.localdate()
+
+        records = AttendanceRecord.objects.filter(date=target_date)
+
+        if username:
+            records = records.filter(user__username=username)
+
+        if user_id:
+            records = records.filter(user__id=user_id)
+
+        serializer = AttendanceRecordSerializer(records, many=True)
+
+        return Response({
+            "date": str(target_date),
+            "count": records.count(),
+            "records": serializer.data
+        })

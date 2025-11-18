@@ -28,4 +28,5 @@ urlpatterns = [
     path("attendance/", views.AttendanceView.as_view(), name="attendance-status"),
     path("attendance/clock-in/", views.ClockInView.as_view(), name="clock-in"),
     path("attendance/clock-out/", views.ClockOutView.as_view(), name="clock-out"),
+    path("attendance/records/", views.AttendanceRecordView.as_view(), name="attendance-records"),
 ]
