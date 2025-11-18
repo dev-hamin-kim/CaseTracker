@@ -149,5 +149,5 @@ class VariantCompletionSerializer(serializers.ModelSerializer):
 class AttendanceRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceRecord
-        fields = ['id', 'user', 'date', 'clock_in_time', 'clock_out_time', "completed_vaiants_count"]
+        fields = ['id', 'user', 'date', 'clock_in_time', 'clock_out_time', "completed_variants_count"]
         read_only_fields = ['user', 'date', 'clock_in_time', 'clock_out_time', 'completed_variants_count']
