@@ -348,7 +348,10 @@ class AttendanceRecordView(views.APIView):
         else:
             target_date = timezone.localdate()
 
-        records = AttendanceRecord.objects.filter(date=target_date)
+        records = AttendanceRecord.objects.select_related("user").filter(
+            date=target_date,
+            user__is_staff=False
+        )
 
         if username:
             records = records.filter(user__username=username)

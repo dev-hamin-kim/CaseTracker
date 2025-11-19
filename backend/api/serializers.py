@@ -148,6 +148,8 @@ class VariantCompletionSerializer(serializers.ModelSerializer):
 
 class AttendanceRecordSerializer(serializers.ModelSerializer):
     user_full_name = serializers.SerializerMethodField()
+    clock_in_time = serializers.TimeField(format="%H:%M", required=False)
+    clock_out_time = serializers.TimeField(format="%H:%M", required=False)
 
     class Meta:
         model = AttendanceRecord
