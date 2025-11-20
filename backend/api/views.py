@@ -274,7 +274,7 @@ class AttendanceView(views.APIView):
 class ClockInView(views.APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request):
+    def post(self, request):
         user = request.user
         today = timezone.localdate()
 
@@ -300,7 +300,7 @@ class ClockInView(views.APIView):
 class ClockOutView(views.APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request):
+    def post(self, request):
         user = request.user
         today = timezone.localdate()
 
