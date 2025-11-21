@@ -147,7 +147,14 @@ class VariantCompletionSerializer(serializers.ModelSerializer):
 #         return case
 
 class AttendanceRecordSerializer(serializers.ModelSerializer):
+    user_full_name = serializers.SerializerMethodField()
+    clock_in_time = serializers.TimeField(format="%H:%M", required=False)
+    clock_out_time = serializers.TimeField(format="%H:%M", required=False)
+
     class Meta:
         model = AttendanceRecord
-        fields = ['id', 'user', 'date', 'clock_in_time', 'clock_out_time', "completed_vaiants_count"]
-        read_only_fields = ['user', 'date', 'clock_in_time', 'clock_out_time', 'completed_variants_count']
+        fields = ['id', 'user', 'user_full_name', 'date', 'clock_in_time', 'clock_out_time', "completed_variants_count"]
+        read_only_fields = ['user', 'user_full_name', 'date', 'clock_in_time', 'clock_out_time', 'completed_variants_count']
+
+    def get_user_full_name(self, obj):
+        return obj.user.get_full_name_with_unique_suffix()
