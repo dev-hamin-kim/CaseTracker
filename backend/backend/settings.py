@@ -59,8 +59,8 @@ INSTALLED_APPS = [
     "api",
     "rest_framework",
     "corsheaders",
-    "rest_framework_simplejwt"
-    'django_crontab'
+    "rest_framework_simplejwt",
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
