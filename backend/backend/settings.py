@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     "api",
     "rest_framework",
     "corsheaders",
-    "rest_framework_simplejwt"
+    "rest_framework_simplejwt",
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -140,6 +141,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+CRONJOBS = [
+    ('1 0 * * *', 'api.management.cron.create_daily_attendance_records'),  # 00:01 every day
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

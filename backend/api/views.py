@@ -274,33 +274,30 @@ class AttendanceView(views.APIView):
 class ClockInView(views.APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request):
+    def post(self, request):
         user = request.user
         today = timezone.localdate()
 
-        record, created = AttendanceRecord.objects.get_or_create(
+        record, _ = AttendanceRecord.objects.get_or_create(
             user=user,
             date=today,
-            defaults={"clock_in_time": timezone.now()}
         )
 
-        if not created:
-            if record.clock_out_time:
-                return Response(
-                    {"detail": "Already completed for today."},
-                    status=status.HTTP_409_CONFLICT
-                )
-            return Response(AttendanceRecordSerializer(record).data)
-        
-        return Response(
-            AttendanceRecordSerializer(record).data,
-            status=status.HTTP_201_CREATED
-        )
+        if record.clock_in_time is not None:
+            return Response(
+                {"detail": "Already clocked in."},
+                status=status.HTTP_409_CONFLICT
+            )
+
+        record.clock_in_time = timezone.localtime().time()
+        record.save()
+
+        return Response(AttendanceRecordSerializer(record).data)
     
 class ClockOutView(views.APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request):
+    def post(self, request):
         user = request.user
         today = timezone.localdate()
 
@@ -311,20 +308,60 @@ class ClockOutView(views.APIView):
                 {"detail": "Cannot clock out before clocking in."},
                 status=status.HTTP_409_CONFLICT
             )
-        
-        if record.clock_out_time:
+
+        if record.clock_out_time is not None:
             return Response(
-                {"detail": "Already completed for today."},
+                {"detail": "Already clocked out."},
                 status=status.HTTP_409_CONFLICT
             )
-        
-        record.clock_out_time = timezone.now()
-        # 아래 부분 여기서 하는 것 보단 퇴근 처리 완료 하고 나중에 배치 작업으로 하는 게 나을 듯
+
+        record.clock_out_time = timezone.localtime().time()
+
+        # Update completed variants for today
         record.completed_variants_count = VariantCompletion.objects.filter(
             user=user,
             completed=True,
             completed_at__date=today
         ).count()
+
         record.save()
 
         return Response(AttendanceRecordSerializer(record).data)
+    
+class AttendanceRecordView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        date_param = request.query_params.get("date")
+        username = request.query_params.get("username")
+        user_id = request.query_params.get("user_id")
+
+        if date_param:
+            try:
+                target_date = timezone.datetime.fromisoformat(date_param).date()
+            except ValueError:
+                return Response(
+                    {"detail": "Invalid date format. Use YYYY-MM-DD."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        else:
+            target_date = timezone.localdate()
+
+        records = AttendanceRecord.objects.select_related("user").filter(
+            date=target_date,
+            user__is_staff=False
+        )
+
+        if username:
+            records = records.filter(user__username=username)
+
+        if user_id:
+            records = records.filter(user__id=user_id)
+
+        serializer = AttendanceRecordSerializer(records, many=True)
+
+        return Response({
+            "date": str(target_date),
+            "count": records.count(),
+            "records": serializer.data
+        })
