@@ -21,7 +21,7 @@ export function MyPage() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const onTappingBottomCTA = () => {
+  const onTappingGoBack = () => {
     router.history.back();
   };
 
@@ -84,12 +84,27 @@ export function MyPage() {
         >
           비밀번호 변경
         </GridList.Item>
+
+        <GridList.Item
+          image={<img
+            src="https://static.toss.im/icons/png/4x/icon-calendar-check-grey.png"
+            style={{
+              width: `24px`,
+              height: `24px`,
+            }}
+          />}
+          onClick={() => {
+            navigate({ to: "/ClockIn" })
+          }}
+        >
+          출퇴근 기록
+        </GridList.Item>
       </GridList>
       <FixedBottomCTA
         color="dark"
         variant="weak"
         display="block"
-        onTap={onTappingBottomCTA}
+        onTap={onTappingGoBack}
       >
         돌아가기
       </FixedBottomCTA>
