@@ -69,6 +69,21 @@ export async function isRefreshTokenValid() {
   }
 }
 
+export async function getUserStatus() {
+  let status = "";
+
+  requestWithToken("attendance/", "GET")
+    .then((data) => {
+      status = data.status;
+    })
+    .catch((error) => {
+      console.error("Error fetching user status:", error);
+      throw error;
+    });
+
+    return status;
+}
+
 export async function requestWithToken(url: string, method: string) {
   const targetURL = baseURL + url;
   let accessToken = await Storage.getItem("access");

@@ -12,6 +12,7 @@ import { CaseTrack } from "../pages/CaseTrack";
 import { CaseList } from "../pages/CaseList";
 import { CreateCase } from "../pages/CreateCase";
 import { MyPage } from "../pages/MyPage";
+import { ClockIn } from "../pages/ClockIn";
 
 // import { Home } from '../pages/Home';
 
@@ -64,6 +65,13 @@ const myPageRoute = createRoute({
   path: "/MyPage",
   component: MyPage,
 });
+
+const clockInRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/ClockIn",
+  component: ClockIn,
+});
+
 // const workRoute = createRoute({
 //   getParentRoute: () => rootRoute,
 //   path: '/home',
@@ -79,5 +87,6 @@ const routeTree = rootRoute.addChildren([
   caseListRoute,
   createCaseRoute,
   myPageRoute,
+  clockInRoute
 ]);
 export const router = createRouter({ routeTree });
