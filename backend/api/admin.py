@@ -8,7 +8,11 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
-    pass
+    @admin.action(description="Hide selected case(s)")
+    def hide_selected_cases(self, request, queryset):
+        queryset.update(is_shown=False)
+
+    actions = ["hide_selected_cases"]
 
 @admin.register(Device)
 class DeviceAdmin(admin.ModelAdmin):
